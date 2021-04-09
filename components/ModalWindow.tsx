@@ -60,15 +60,16 @@ export default function BookMarkModal({ modalIsOpen, setIsOpen, db }: {
           style={customStyles}
         >
           {
-              db.map((value) =>
+              db.map((value, index) =>
                 <div
+                  key={index}
                   onClick={() => {
                     setIsOpenDetails(true);
                     setImg(value.thumbnail);
                     setContents(value.contents);
                   }}
                   style={{ margin: '10px',flexGrow: '1', width: '30vh' }}>
-              <li style={{color:'white'}}>{value.title}</li>
+              <li style={{color:'white'}} >{value.title}</li>
               <img src={value.thumbnail} style={{ width:'100%', maxWidth:'450px'}}/>
               </div>
               )

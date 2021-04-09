@@ -2,6 +2,7 @@ import React from "react";
 import GoogleMapReact from "google-map-react";
 
 export default function Map() {
+
   const defaultLatLng = {
     lat: 35.7022589,
     lng: 139.7744733,

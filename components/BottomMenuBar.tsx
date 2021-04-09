@@ -11,6 +11,7 @@ import { useState } from "react";
 import BookMarkModal from './ModalWindow'
 import { dataBase } from '../lib/db'
 import { useRouter } from 'next/router'
+import { auth } from '../src/firebase';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,7 +74,12 @@ export default function BottomMenuBar() {
           <IconButton
             color="inherit"
             className={classes.icon}
-            onClick={() => { setIsOpen(true); setDb(dataBase);}}
+            onClick={() => {
+              setIsOpen(true);
+              auth.currentUser
+                ? setDb(dataBase)
+                : setDb([{}]);
+            }}
             >
             <FavoriteIcon />
           </IconButton>
@@ -82,7 +88,7 @@ export default function BottomMenuBar() {
             color="inherit"
             className={classes.icon}
             onClick={() => {
-              router.push('/csr');
+              router.push('/csr/login');
             }}
             >
             <PersonIcon fontSize={ 'default'}/>
