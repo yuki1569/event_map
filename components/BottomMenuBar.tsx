@@ -8,7 +8,8 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonIcon from '@material-ui/icons/Person';
 import { useState } from "react";
-import BookMarkModal from './ModalWindow'
+import ModalEventList from './ModalEventList'
+import ModalEventListBookMark from './ModalEventListBookMark'
 import { dataBase } from '../lib/db'
 import { useRouter } from 'next/router'
 import { auth } from '../src/firebase';
@@ -29,19 +30,15 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function BottomMenuBar() {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [modalIsOpenBookMark, setIsOpenBookMark] = useState(false);
   const [db, setDb] = useState([{}]);
   const router = useRouter();
-
-
-  const data2 = [
-  {key1: 4, key2: 5, key3: 6},
-  {key1: 10, key2: 20, key3: 30}
-]
 
   return (
     <React.Fragment >
       <CssBaseline />
-      <BookMarkModal modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} db={db} />
+      <ModalEventList modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} db={db} />
+      <ModalEventListBookMark modalIsOpenBookMark={modalIsOpenBookMark} setIsOpenBookMark={setIsOpenBookMark} db={db} />
       
       <AppBar position="fixed" color="primary" 
         className={classes.appBar}
@@ -66,7 +63,11 @@ export default function BottomMenuBar() {
           <IconButton
             color="inherit"
             className={classes.icon}
-            onClick={() => { setIsOpen(true); setDb(dataBase);}}
+            onClick={() => {
+              setIsOpen(true);
+              setIsOpenBookMark(false);
+              setDb(dataBase);
+            }}
             >
             <SearchIcon />
           </IconButton>
@@ -75,7 +76,8 @@ export default function BottomMenuBar() {
             color="inherit"
             className={classes.icon}
             onClick={() => {
-              setIsOpen(true);
+              setIsOpenBookMark(true);
+              setIsOpen(false);
               auth.currentUser
                 ? setDb(dataBase)
                 : setDb([{}]);

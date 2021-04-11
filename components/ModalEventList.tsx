@@ -1,5 +1,5 @@
 import Modal from 'react-modal'
-import DetailsModal from './Modaldetails'
+import ModalEventListDetails from './ModalEventListDetails'
 import { useState } from "react";
 
 
@@ -10,7 +10,6 @@ const customStyles = {
     backgroundColor: "rgba(0,0,0,0.3)",
     scrollBars: 'red',
     zIndex: 10,
-    
     // overflowY: "scroll",
   },
 
@@ -36,7 +35,7 @@ const customStyles = {
 // アプリのルートを識別するクエリセレクタを指定する。
 Modal.setAppElement('#__next')
 
-export default function BookMarkModal({ modalIsOpen, setIsOpen, db }: {
+export default function ModalEventList({ modalIsOpen, setIsOpen, db }: {
     modalIsOpen: boolean;
     setIsOpen: any;
     db: any;
@@ -46,9 +45,14 @@ export default function BookMarkModal({ modalIsOpen, setIsOpen, db }: {
   const [img, setImg] = useState('');
   const [contents, setContents] = useState('');
 
+  // const set = () => {
+  //   fireStoreDb.collection('items').add({name: 'string'})
+  // };
+
     return (
       < >
-        <DetailsModal modalIsOpenDetails={modalIsOpenDetails} setIsOpenDetails={setIsOpenDetails} img={img} contents={contents}/>
+        <ModalEventListDetails modalIsOpenDetails={modalIsOpenDetails} setIsOpenDetails={setIsOpenDetails} img={img} contents={contents} />
+        
         <Modal
           // isOpenがtrueならモダールが起動する※Modalのプロパティ
           isOpen={modalIsOpen}
@@ -69,7 +73,11 @@ export default function BookMarkModal({ modalIsOpen, setIsOpen, db }: {
                     setContents(value.contents);
                   }}
                   style={{ margin: '10px',flexGrow: '1', width: '30vh' }}>
-              <li style={{color:'white'}} >{value.title}</li>
+                  <li style={{ color: 'white' }} >{value.title}</li>
+                  <button
+                    onClick={() => {
+                  }}
+                  >💛</button>
               <img src={value.thumbnail} style={{ width:'100%', maxWidth:'450px'}}/>
               </div>
               )

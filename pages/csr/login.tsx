@@ -33,12 +33,15 @@ function Copyright() {
 const useStyles = makeStyles((theme) => ({
   center: {
     display: 'flex',
-    justifyContent: 'center',
+    width:'100%',
+    position: 'fixed',
+    top:'11vh',
     zIndex: 9,
     flexDirection: 'column',
     alignItems: 'center',
-
-    marginTop:'50px',
+    textAlign:'center',
+    height: '82vh',
+    backgroundColor:'rgba(10,0,0,0.3)'
   },
 
   paper: {
@@ -47,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex:9,
     flexDirection: 'column',
     alignItems: 'center',
+    
   },
   avatar: {
     margin: theme.spacing(1),
@@ -109,7 +113,7 @@ export default function SignIn() {
             
             disableElevation
             // align="center" iconSize={'20'}
-            style={{ height: '45px', width: '100%', margin: 0, }}
+            style={{ height: '45px', width: '90%', margin: '10px', }}
           >
             <span style={{ fontSize: 16 }}>
               Googleでログイン
@@ -120,13 +124,16 @@ export default function SignIn() {
           <TwitterLoginButton
             // onClick={this.twitterLogin}
             align="center" iconSize={'20'}
-            style={{ height:'45px', width:'100%', margin:0,marginTop:'14px'}}
+            style={{display:'inline-block', height: '45px', width: '90%', margin: '10px', }}
           >
             <span style={{ fontSize: 16 }}>Twitterでログイン
             {/* {this.props.formText} */}
             </span>
         </TwitterLoginButton>
-          <div style={{ textAlign: 'center', marginTop: 20 }}>または</div>
+          
+              <div style={{ textAlign: 'center', marginTop: 20 ,color:'white'}}>または</div>
+
+
         <form style={{ textAlign: 'center' }} noValidate autoComplete="off"></form>
           <TextField
             variant="outlined"
@@ -138,6 +145,7 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            style={{width:'90%',backgroundColor:'white',borderRadius:'3px'}}
           />
           <TextField
             variant="outlined"
@@ -149,6 +157,7 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            style={{width:'90%',backgroundColor:'white',borderRadius:'3px'}}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -160,10 +169,11 @@ export default function SignIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            style={{width:'90%',borderRadius:'3px'}}
           >
             Sign In
           </Button>
-          <Grid container>
+          {/* <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
                 Forgot password?
@@ -174,7 +184,7 @@ export default function SignIn() {
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
-          </Grid>
+          </Grid> */}
         </form>
       </div>
       <Box mt={8}>
