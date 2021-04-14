@@ -46,12 +46,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <AuthContext.Provider value={state}>
           
           <Component {...pageProps}/>
-        <Map />
+        {/* <Map /> */}
 
         </AuthContext.Provider>
-        <BottomMenuBar />
+        <BottomMenuBar/>
         <CssBaseline />
-        <NavBar />
+        {/* <NavBar /> */}
       </ThemeProvider>
 
     </React.Fragment>

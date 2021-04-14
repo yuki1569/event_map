@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import GoogleMapReact from "google-map-react";
 // import "../styles.css";
-import { dataBase } from '../../lib/db'
+import { eventDB } from '../../lib/db'
 import { delBasePath } from "next/dist/next-server/lib/router/router";
 import Markertest from './marker';
 import ModalBottom from '../ModalBottom';
@@ -50,7 +50,7 @@ export default function Maps ()  {
   const [contents, setContents] = useState('');
   
   const handleApiLoaded = ({ map, maps }) => {
-    dataBase.map((db) => {
+    eventDB.map((db) => {
       let streetadress = db.streetAddress.split(',')
       let lat = Number(streetadress[0])
       let lng = Number(streetadress[1])

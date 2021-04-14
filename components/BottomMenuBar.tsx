@@ -9,10 +9,13 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonIcon from '@material-ui/icons/Person';
 import { useState } from "react";
 import ModalEventList from './ModalEventList'
-import ModalEventListBookMark from './ModalEventListBookMark'
-import { dataBase } from '../lib/db'
+// import { ModalEventListBookMark } from './ModalEventListBookMark'
+// import Details from './ModalEventListBookMark'
+import { eventDB } from '../lib/db';
 import { useRouter } from 'next/router'
-import { auth } from '../src/firebase';
+import { auth, fireStoreDB, firebaseUser,bookMarkQuery } from '../src/firebase';
+import { DvrOutlined } from '@material-ui/icons';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,6 +30,21 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+// export async function getSeverSideProps() {
+//   const fireStoredb = await fireStoreDB.collection('bookMark').get();
+//   const query = []
+  
+//   await fireStoredb.docs.map((doc) => {
+//       query.push(doc.data())
+//     });
+//   console.log(query);
+//   return {
+//     porps:query
+//   }
+// }
+
+// getSeverSideProps();
+
 export default function BottomMenuBar() {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -38,7 +56,10 @@ export default function BottomMenuBar() {
     <React.Fragment >
       <CssBaseline />
       <ModalEventList modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} db={db} />
-      <ModalEventListBookMark modalIsOpenBookMark={modalIsOpenBookMark} setIsOpenBookMark={setIsOpenBookMark} db={db} />
+      {/* <Details query={''}  /> */}
+      {/* <ModalEventListBookMark modalIsOpenBookMark={true} setIsOpenBookMark={setIsOpenBookMark} 
+        // fireStoreDb={(async () => { let test = await getSeverSideProps(); return test })()}
+      /> */}
       
       <AppBar position="fixed" color="primary" 
         className={classes.appBar}
@@ -64,11 +85,11 @@ export default function BottomMenuBar() {
             color="inherit"
             className={classes.icon}
             onClick={() => {
-              setIsOpen(true);
+              setIsOpen(!modalIsOpen);
               setIsOpenBookMark(false);
-              setDb(dataBase);
+              setDb(eventDB);
             }}
-            >
+          >
             <SearchIcon />
           </IconButton>
 
@@ -76,11 +97,10 @@ export default function BottomMenuBar() {
             color="inherit"
             className={classes.icon}
             onClick={() => {
-              setIsOpenBookMark(true);
+              // setIsOpenBookMark(true);
               setIsOpen(false);
               auth.currentUser
-                ? setDb(dataBase)
-                : setDb([{}]);
+                router.push('/csr/bookMark');
             }}
             >
             <FavoriteIcon />
