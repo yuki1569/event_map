@@ -1,5 +1,6 @@
 // import Layout from "../components/Layout";
 import { Login, Logout, auth } from "../../src/firebase";
+import { dataBase } from '../../lib/db';
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -186,9 +187,9 @@ export default function SignIn() {
           </Grid> */}
         </form>
       </div>
-      {/* <Box mt={8}>
+      <Box mt={8}>
         <Copyright />
-      </Box> */}
+      </Box>
     </>
         }
       {/* </Container> */}
