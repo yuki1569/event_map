@@ -1,4 +1,5 @@
-import React from 'react';
+import { useRouter } from 'next/router'
+import React ,{ useState } from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -7,15 +8,9 @@ import SearchIcon from '@material-ui/icons/Search';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonIcon from '@material-ui/icons/Person';
-import { useState } from "react";
-import ModalEventList from './ModalEventList'
-// import { ModalEventListBookMark } from './ModalEventListBookMark'
-// import Details from './ModalEventListBookMark'
-import { eventDB } from '../lib/db';
-import { useRouter } from 'next/router'
-import { auth, fireStoreDB, firebaseUser,bookMarkQuery } from '../src/firebase';
-import { DvrOutlined } from '@material-ui/icons';
-
+import { auth, fireStoreDB, firebaseUser } from '../src/firebase';
+import FloatingActionButtons from './AddButton';
+import ModalAddWidow from './ModalAddWidow'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,12 +49,31 @@ export default function BottomMenuBar() {
 
   return (
     <React.Fragment >
+      <div
+      style={{
+          
+        }}>
+      <ModalAddWidow
+        modalIsOpen={modalIsOpen}
+        setIsOpen={setIsOpen}
+      />
+
+      </div>
       <CssBaseline />
-      <ModalEventList modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} db={db} />
-      {/* <Details query={''}  /> */}
-      {/* <ModalEventListBookMark modalIsOpenBookMark={true} setIsOpenBookMark={setIsOpenBookMark} 
-        // fireStoreDb={(async () => { let test = await getSeverSideProps(); return test })()}
-      /> */}
+      <div
+        style={{
+          position: 'fixed',
+          zIndex:20,
+          right:'10px',
+          bottom: '8vh',
+          
+        }}
+        onClick={() => {
+          setIsOpen(!modalIsOpen);
+        }}
+      >
+      <FloatingActionButtons />
+      </div>
       
       <AppBar position="fixed" color="primary" 
         className={classes.appBar}
@@ -85,9 +99,10 @@ export default function BottomMenuBar() {
             color="inherit"
             className={classes.icon}
             onClick={() => {
-              setIsOpen(!modalIsOpen);
-              setIsOpenBookMark(false);
-              setDb(eventDB);
+              // setIsOpen(!modalIsOpen);
+              // setIsOpenBookMark(false);
+              // setDb(eventDB);
+              router.push('/csr/eventList');
             }}
           >
             <SearchIcon />
@@ -98,7 +113,7 @@ export default function BottomMenuBar() {
             className={classes.icon}
             onClick={() => {
               // setIsOpenBookMark(true);
-              setIsOpen(false);
+              // setIsOpen(false);
               auth.currentUser
                 router.push('/csr/bookMark');
             }}

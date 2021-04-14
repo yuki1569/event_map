@@ -6,8 +6,21 @@ import { eventDB } from '../../lib/db'
 import { delBasePath } from "next/dist/next-server/lib/router/router";
 import Markertest from './marker';
 import ModalBottom from '../ModalBottom';
+import { auth, fireStoreDB, firebaseUser,bookMarkQuery } from '../../src/firebase';
+
 
 const APIKEY = "";
+
+export async function get() {
+  const fireStoredb = await fireStoreDB.collection('createEvent').get();
+  const createEventList = []
+  await fireStoredb.docs.map((doc) => {
+    createEventList.push(doc.data())
+    });
+  // console.log(query);
+  return createEventList ;
+}
+
 
 export default function Maps ()  {
   const [center, setCenter] = useState({ lat: 34.665442, lng: 135.432338 });
@@ -55,7 +68,7 @@ export default function Maps ()  {
       let lat = Number(streetadress[0])
       let lng = Number(streetadress[1])
       new maps.Marker({
-        position: { lat:lat, lng:lng },
+        position: { lat: lat, lng: lng },
         map,
         // title: beach[0],
         // zIndex: beach[3],
@@ -69,8 +82,35 @@ export default function Maps ()  {
       })
       
     })
+    async function test() {
+      const fireStoredb = await fireStoreDB.collection('createEvent').get();
+      const createEventList = []
+      await fireStoredb.docs.map((doc) => {
+        createEventList.push(doc.data())
+      });
+      await createEventList.map((db) => {
+        let streetadress = db.streetAddress.split(',')
+        let lat = Number(streetadress[0])
+        let lng = Number(streetadress[1])
+        new maps.Marker({
+          position: { lat: lat, lng: lng },
+          map,
+          // title: beach[0],
+          // zIndex: beach[3],
+        }).addListener("click", () => {
+          // console.log(db.title)
+          map.setCenter({ lat: lat, lng: lng });
+          // console.log('test');
+          setIsOpenBottom(true);
+          setImg(db.thumbnail);
+          setContents(db.contents);
+        })
+      
+      })
     
-  };
+    }
+    test()
+  }
 
 
   return (

@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(10),
     display: 'flex',
     zIndex:9,
-    flexDirection: 'column',
+    // flexDirection: 'column',
     alignItems: 'center',
     
   },
@@ -69,11 +69,7 @@ export default function SignIn() {
 
   return (
     <div className={classes.center}>
-    {/* <Container
-      // component="main"
-      maxWidth="xs"
-    > */}
-      <CssBaseline />
+      {/* <CssBaseline /> */}
       
       {auth.currentUser
         ? <div className={classes.paper}>
@@ -95,11 +91,15 @@ export default function SignIn() {
                </span></Button>
         </div>
         : <>
-            <div className={classes.center}>
+          <div className={classes.center}>
+            <div style={{maxWidth:'700px',marginTop:'5%'}}>
             {/* <div className={classes.paper}> */}
-        <Avatar style={{backgroundColor:'#19857b'}} className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+            <Avatar
+              className={classes.avatar}
+              style={{ backgroundColor: '#19857b',margin:'0 auto' }}
+            >
+            <LockOutlinedIcon />
+            </Avatar>
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
@@ -112,7 +112,7 @@ export default function SignIn() {
             
             disableElevation
             // align="center" iconSize={'20'}
-            style={{ height: '45px', width: '90%', margin: '10px', }}
+            style={{ height: '45px', width: '90%', maxWidth:'600px',margin: '10px', }}
           >
             <span style={{ fontSize: 16 }}>
               Googleでログイン
@@ -123,7 +123,7 @@ export default function SignIn() {
           <TwitterLoginButton
             // onClick={this.twitterLogin}
             align="center" iconSize={'20'}
-            style={{display:'inline-block', height: '45px', width: '90%', margin: '10px', }}
+            style={{display:'inline-block', height: '45px', width: '90%', maxWidth:'600px',margin: '10px', }}
           >
             <span style={{ fontSize: 16 }}>Twitterでログイン
             {/* {this.props.formText} */}
@@ -133,9 +133,12 @@ export default function SignIn() {
               <div style={{ textAlign: 'center', marginTop: 20 ,color:'white'}}>または</div>
 
 
-        <form style={{ textAlign: 'center' }} noValidate autoComplete="off"></form>
+              <form style={{ textAlign: 'center' }} noValidate autoComplete="off">
+
+              </form>
+              
           <TextField
-            variant="outlined"
+            variant="filled"
             margin="normal"
             required
             fullWidth
@@ -144,10 +147,11 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
-            style={{width:'90%',backgroundColor:'white',borderRadius:'3px'}}
+            style={{width:'90%',maxWidth:'600px',backgroundColor:'white',borderRadius:'3px'}}
+            
           />
           <TextField
-            variant="outlined"
+            variant="filled"
             margin="normal"
             required
             fullWidth
@@ -156,19 +160,19 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
-            style={{width:'90%',backgroundColor:'white',borderRadius:'3px'}}
+            style={{width:'90%',maxWidth:'600px',backgroundColor:'white',borderRadius:'3px'}}
           />
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
-          />
+          /> */}
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
-            style={{width:'90%',borderRadius:'3px'}}
+            style={{width:'90%',maxWidth:'600px',borderRadius:'3px'}}
           >
             Sign In
           </Button>
@@ -186,12 +190,14 @@ export default function SignIn() {
           </Grid> */}
         </form>
       </div>
+      </div>
       {/* <Box mt={8}>
         <Copyright />
       </Box> */}
     </>
         }
-      {/* </Container> */}
+          {/* </Container> */}
+          
       </div>
   );
 }
