@@ -67,7 +67,11 @@ export default function BookMarkModal({ modalIsOpen, setIsOpen, db }: {
                     setImg(value.thumbnail);
                     setContents(value.contents);
                   }}
-                  style={{ margin: '10px',flexGrow: '1', width: '30vh' }}>
+                  style={{
+                    margin: '10px',
+                    // flexGrow: '1',
+                    width: '30vh'
+                  }}>
               <li style={{color:'white'}}>{value.title}</li>
               <img src={value.thumbnail} style={{ width:'100%', maxWidth:'450px'}}/>
               </div>
