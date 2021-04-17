@@ -88,7 +88,11 @@ export default function ModalEventList({ modalIsOpen, setIsOpen }: {
                     setImg(value.thumbnail);
                     setContents(value.contents);
                   }}
-                  style={{ margin: '10px',flexGrow: '1', width: '30vh' }}>
+                  style={{
+                    margin: '10px',
+                    // flexGrow: '1',
+                    width: '30vh'
+                  }}>
                   <li style={{ color: 'white' }} >{value.title}</li>
                   <li style={{ color: 'white' }} >{value.period}</li>
       

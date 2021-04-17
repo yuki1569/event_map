@@ -2,14 +2,14 @@
 import React, { useState, useEffect } from "react";
 import GoogleMapReact from "google-map-react";
 // import "../styles.css";
-import { eventDB } from '../../lib/db'
-import { delBasePath } from "next/dist/next-server/lib/router/router";
 import Markertest from './marker';
 import ModalBottom from '../ModalBottom';
-import { auth, fireStoreDB, firebaseUser,bookMarkQuery } from '../../src/firebase';
+import { auth, fireStoreDB, firebaseUser, bookMarkQuery } from '../../src/firebase';
+import Geocode from "react-geocode";
 
 
 const APIKEY = "";
+Geocode.setApiKey(`${process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}`);
 
 export async function get() {
   const fireStoredb = await fireStoreDB.collection('createEvent').get();
@@ -63,26 +63,46 @@ export default function Maps ()  {
   const [contents, setContents] = useState('');
   
   const handleApiLoaded = ({ map, maps }) => {
-    eventDB.map((db) => {
-      let streetadress = db.streetAddress.split(',')
-      let lat = Number(streetadress[0])
-      let lng = Number(streetadress[1])
-      new maps.Marker({
-        position: { lat: lat, lng: lng },
-        map,
-        // title: beach[0],
-        // zIndex: beach[3],
-      }).addListener("click", () => {
-        // console.log(db.title)
-        map.setCenter({ lat: lat, lng: lng });
-        // console.log('test');
-        setIsOpenBottom(true);
-        setImg(db.thumbnail);
-        setContents(db.contents);
+    
+    async function getFireStoreEventList() {
+      const fireStoredb = await fireStoreDB.collection('eventList').get();
+      const eventList = []
+      await fireStoredb.docs.map((doc) => {
+        eventList.push(doc.data())
+        console.log(eventList)
+      });
+      await eventList.map((db) => {
+        Geocode.fromAddress(db.streetAddress).then(
+          (response) => {
+            const { lat, lng } = response.results[0].geometry.location;
+            console.log(lat, lng);
+            // let streetadress = db.streetAddress.split(',')
+            // let lat = Number(streetadress[0])
+            // let lng = Number(streetadress[1])
+            new maps.Marker({
+              position: { lat: lat, lng: lng },
+              map,
+              // title: beach[0],
+              // zIndex: beach[3],
+            }).addListener("click", () => {
+              // console.log(db.title)
+              map.setCenter({ lat: lat, lng: lng });
+              // console.log('test');
+              setIsOpenBottom(true);
+              setImg(db.thumbnail);
+              setContents(db.contents);
+            })
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
       })
-      
-    })
-    async function test() {
+    }
+    getFireStoreEventList();
+
+
+    async function getFireStoreCreateEvent() {
       const fireStoredb = await fireStoreDB.collection('createEvent').get();
       const createEventList = []
       await fireStoredb.docs.map((doc) => {
@@ -109,7 +129,7 @@ export default function Maps ()  {
       })
     
     }
-    test()
+    getFireStoreCreateEvent()
   }
 
 

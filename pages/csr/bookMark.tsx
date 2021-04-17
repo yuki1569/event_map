@@ -75,7 +75,11 @@ export default function ModalEventListBookMark({ modalIsOpenBookMark, setIsOpenB
                         setImg(value.thumbnail);
                         setContents(value.contents);
                       }}
-                      style={{ margin: '10px', flexGrow: '1', width: '30vh' }}>
+                      style={{
+                        margin: '10px',
+                        // flexGrow: '1',
+                        width: '30vh'
+                      }}>
                       
                       <li style={{ color: 'white' }} >{value.title}</li>
                       {/* <button>💛</button> */}
