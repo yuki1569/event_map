@@ -77,7 +77,7 @@ export default function ModalEventListBookMark({ modalIsOpenBookMark, setIsOpenB
                       }}
                       style={{
                         margin: '10px',
-                        // flexGrow: '1',
+                        flexGrow: 1,
                         width: '30vh'
                       }}>
                       

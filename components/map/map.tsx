@@ -14,15 +14,15 @@ import Geocode from "react-geocode";
 const APIKEY = "";
 Geocode.setApiKey(`${process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}`);
 
-// export async function get() {
-//   const fireStoredb = await fireStoreDB.collection('createEvent').get();
-//   const createEventList = []
-//   await fireStoredb.docs.map((doc) => {
-//     createEventList.push(doc.data())
-//     });
-//   // console.log(query);
-//   return createEventList ;
-// }
+export async function get() {
+  const fireStoredb = await fireStoreDB.collection('createEvent').get();
+  const createEventList = []
+  await fireStoredb.docs.map((doc) => {
+    createEventList.push(doc.data())
+    });
+  // console.log(query);
+  return createEventList ;
+}
 
 export default function Maps() {
   const [center, setCenter] = useState({ lat: 34.665442, lng: 135.432338 });
@@ -129,7 +129,7 @@ export default function Maps() {
         })
       },
           (error) => {
-            console.error(error);
+            // console.error(error);
           }
         );
       })
@@ -148,11 +148,9 @@ async function successCallback(position){
     var latitude:number = await position.coords.latitude;
     // 経度を取得し画面に表示
   var longitude: number = await position.coords.longitude;
-  // console.log(latitude);
-  // console.log(longitude);
+
   await setCenter({ lat: latitude+0.00001, lng: longitude+0.00001 })
   await setCenter({ lat: latitude, lng: longitude })
-  console.log(center)
 };
 
 
