@@ -91,9 +91,7 @@ export default function Maps() {
             // title: beach[0],
             // zIndex: beach[3],
           }).addListener("click", () => {
-            // console.log(db.title)
             map.setCenter({ lat: lat, lng: lng });
-            // console.log('test');
             setIsOpenBottom(true);
             setImg(db.thumbnail);
             setContents(db.contents);
