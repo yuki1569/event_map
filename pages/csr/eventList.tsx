@@ -95,27 +95,30 @@ export default function ModalEventList({ modalIsOpen, setIsOpen }: {
                   }}>
                   <li style={{ color: 'white' }} >{value.title}</li>
                   <li style={{ color: 'white' }} >{value.period}</li>
-      
-            <IconButton
-                      color="inherit"
-                      onClick={() => {
+                  <div
+                  onClick={() => {
                       fireStoreDB.collection('bookMark').add({
                           uid: firebaseUser().uid,
-                          id: value.id,
                           title: value.title,
-                          subTitle:value.subTitle,
+                          // subTitle:value.subTitle,
                           thumbnail: value.thumbnail,
                           link: value.link,
                           contents: value.contents,
                           period: value.period,
-                          genre: value.genre,
-                          genre2: value.genre2,
+                          tagList: value.tagList,
                           streetAddress: value.streetAddress,
                         })
                        }}
+                  >
+                    
+            <IconButton
+                      color="inherit"
+                      
             >
             <FavoriteIcon />
           </IconButton>
+          </div>
+
 
               <img src={value.thumbnail} style={{ width:'100%', maxWidth:'450px'}}/>
               </div>
