@@ -10,8 +10,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonIcon from '@material-ui/icons/Person';
 import MapIcon from '@material-ui/icons/Map';
 import { auth, fireStoreDB, firebaseUser } from '../src/firebase';
-import AddButtons from './Button/AddButton';
-import ModalAddWindow from './ModalAddWidow'
+import FloatingActionButtons from './Button/AddButton';
+import ModalAddWidow from './ModalAddWidow'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,26 +26,42 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function BottomMenuBar(
-  props,
-  modalHidden,
+// export async function getSeverSideProps() {
+//   const fireStoredb = await fireStoreDB.collection('bookMark').get();
+//   const query = []
+  
+//   await fireStoredb.docs.map((doc) => {
+//       query.push(doc.data())
+//     });
+//   console.log(query);
+//   return {
+//     porps:query
+//   }
+// }
 
-) {
+// getSeverSideProps();
+
+export default function BottomMenuBar() {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [modalIsOpenBookMark, setIsOpenBookMark] = useState(false);
+  const [db, setDb] = useState([{}]);
   const router = useRouter();
   
 
   return (
     <React.Fragment >
-      <div>
-      <ModalAddWindow
+      <div
+      style={{
+          
+        }}>
+      <ModalAddWidow
         modalIsOpen={modalIsOpen}
         setIsOpen={setIsOpen}
       />
-      </div>
-      {/* <CssBaseline /> */}
 
+      </div>
+      <CssBaseline />
       <div
         style={{
           position: 'fixed',
@@ -58,7 +74,7 @@ export default function BottomMenuBar(
           setIsOpen(!modalIsOpen);
         }}
       >
-      <AddButtons />
+      <FloatingActionButtons />
       </div>
       
       <AppBar position="fixed" color="primary" 
@@ -76,8 +92,6 @@ export default function BottomMenuBar(
             className={classes.icon}
             onClick={() => {
               router.push('/');
-              props.setmodallHidden(true);
-              
             }}
             >
             <MapIcon />
@@ -87,35 +101,33 @@ export default function BottomMenuBar(
             color="inherit"
             className={classes.icon}
             onClick={() => {
-              props.setmodallHidden(!modalHidden)
               // setIsOpen(!modalIsOpen);
               // setIsOpenBookMark(false);
               // setDb(eventDB);
-              // router.push('/csr/eventList');
+              router.push('/csr/eventList');
             }}
           >
             <SearchIcon />
           </IconButton>
 
-          {/* <IconButton
+          <IconButton
             color="inherit"
             className={classes.icon}
             onClick={() => {
               // setIsOpenBookMark(true);
               // setIsOpen(false);
               auth.currentUser
-              router.push('/csr/bookMark');
+                router.push('/csr/bookMark');
             }}
             >
             <FavoriteIcon />
-          </IconButton> */}
+          </IconButton>
 
           <IconButton
             color="inherit"
             className={classes.icon}
             onClick={() => {
               router.push('/csr/login');
-              props.setmodallHidden(true);
             }}
             >
             <PersonIcon fontSize={ 'default'}/>

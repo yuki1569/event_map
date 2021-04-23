@@ -6,7 +6,7 @@ const customStyles = {
   overlay: {
     position: "fixed",
     left: 0,
-    top:'65%',
+    top:'45%',
     zIndex: 9,
     // backgroundColor: "rgba(0,0,0,0.3)",
     // overflowY: "scroll",
@@ -25,7 +25,7 @@ const customStyles = {
     bottom                : 'auto',
     marginRight           : '-20%',
     width                 : '90%',
-    height                : '82%',
+    height                : '90%',
     // transform: 'translate(-50%, -50%)',
     
   }

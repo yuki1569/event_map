@@ -13,7 +13,6 @@ import AuthContext from "../src/AuthContext";
 import authReducer from "../src/authReducer";
 import { listenAuthState } from "../src/firebase";
 
-
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [state, dispatch] = useReducer(
     authReducer.reducer,
@@ -49,9 +48,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <Map />
 
         </AuthContext.Provider>
-        <BottomMenuBar/>
         <CssBaseline />
-        <NavBar />
       </ThemeProvider>
 
     </React.Fragment>

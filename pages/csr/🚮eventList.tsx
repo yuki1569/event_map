@@ -10,6 +10,8 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Geocode from "react-geocode";
 
+
+
 const customStyles = {
   overlay: {
     position: "fixed",
@@ -49,6 +51,17 @@ export default function EventList (){
     
   const [img, setImg] = useState('');
   const [contents, setContents] = useState('');
+
+    // 2点間座標のの距離を求める
+  function distance(lat1, lng1, lat2, lng2) {
+    lat1 *= Math.PI / 180;
+    lng1 *= Math.PI / 180;
+    lat2 *= Math.PI / 180;
+    lng2 *= Math.PI / 180;
+    return Math.round(6371 * Math.acos(Math.cos(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1) + Math.sin(lat1) * Math.sin(lat2)) * 10) / 10;
+  }
+  // console.log(distance(currentPosition.lat, currentPosition.lng, 33.5734523, 130.4124632))
+
  
   function sortDateAscendingOrder
     () {
@@ -69,6 +82,40 @@ export default function EventList (){
     () {
     eventDB.sort(function (a, b) {
       if (a.endDate < b.endDate) {
+        return 1;
+      } else {
+        return -1;
+      }
+    })
+    const db = []
+    eventDB.map(event => {
+      db.push(event)
+    })
+    return db
+  }
+  function sortDistanceAscendingOrder
+    () {
+    eventDB.sort(function (a, b) {
+      let A = distance(currentPosition.lat, currentPosition.lng, a.longitudeLatitude[0], a.longitudeLatitude[1])
+      let B = distance(currentPosition.lat, currentPosition.lng, b.longitudeLatitude[0], b.longitudeLatitude[1])
+      if (A > B) {
+        return 1;
+      } else {
+        return -1;
+      }
+    })
+    const db = []
+    eventDB.map(event => {
+      db.push(event)
+    })
+    return db
+  }
+  function sortDistanceDescendingOrder
+    () {
+    eventDB.sort(function (a, b) {
+      let A = distance(currentPosition.lat, currentPosition.lng, a.longitudeLatitude[0], a.longitudeLatitude[1])
+      let B = distance(currentPosition.lat, currentPosition.lng, b.longitudeLatitude[0], b.longitudeLatitude[1])
+      if (A < B) {
         return 1;
       } else {
         return -1;
@@ -108,17 +155,6 @@ export default function EventList (){
       setEventList(eventList)
     }, [eventList])
   
-  // 2点間座標のの距離を求める
-  function distance(lat1, lng1, lat2, lng2) {
-    lat1 *= Math.PI / 180;
-    lng1 *= Math.PI / 180;
-    lat2 *= Math.PI / 180;
-    lng2 *= Math.PI / 180;
-    return Math.round(6371 * Math.acos(Math.cos(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1) + Math.sin(lat1) * Math.sin(lat2)) * 10) / 10;
-  }
-  console.log(distance(currentPosition.lat, currentPosition.lng, 33.5734523, 130.4124632))
-
-
 
 
   return (
@@ -142,7 +178,24 @@ export default function EventList (){
               >
                 終了日付降順
               </button>
-      
+              <button
+                onClick={() => {
+                  setEventList(sortDistanceAscendingOrder
+                    ())
+                }}
+              >
+                現在位置からの距離昇順
+              </button>
+              <button
+                onClick={() => {
+                  setEventList( sortDistanceDescendingOrder
+                    ())
+                }}
+              >
+                現在位置からの距離降順
+              </button>
+              
+     
       {
       eventList.map((value, index) =>
           
@@ -157,13 +210,18 @@ export default function EventList (){
           margin: '10px',
           flexGrow: 1,
           width: '30vh'
-          }}>
-          
-            
+}}>
+{
+  console.log(
+            distance(currentPosition.lat, currentPosition.lng, value.longitudeLatitude[0], value.longitudeLatitude[1])
+          )            
 
-          <li>
-            {distance(currentPosition.lat, currentPosition.lng, value.longitudeLatitude[0][0], value.longitudeLatitude[0][1])}
-          </li>
+            }
+          
+
+          <p style={{ color: 'white' }}>
+            {distance(currentPosition.lat, currentPosition.lng, value.longitudeLatitude[0], value.longitudeLatitude[1])}km先
+          </p>
         <li style={{ color: 'white' }} >{value.title}</li>
         <li style={{ color: 'white' }} >{value.period}</li>
         

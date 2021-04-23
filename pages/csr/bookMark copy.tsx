@@ -1,7 +1,7 @@
 import Modal from 'react-modal'
 import ModalEventListDetails from '../../components/ModalEventListDetails'
-import { useState,useEffect } from "react";
-import { auth, fireStoreDB, firebaseUser,bookMarkQuery,Firebase} from '../../src/firebase';
+import { useState } from "react";
+import { auth, fireStoreDB, firebaseUser,bookMarkQuery } from '../../src/firebase';
 import { eventDB } from '../../lib/db'
 
 const customStyles = {
@@ -48,25 +48,6 @@ export default function ModalEventListBookMark({ modalIsOpenBookMark, setIsOpenB
   const [img, setImg] = useState('');
   const [contents, setContents] = useState('');
 
-  const [loading, setLoading] = useState(true);
-  const [bookMark, setBookMark] = useState([]);
-  useEffect(() => {
-    const searchBookMark = async() => {
-      // Firestoreのコレクションを指定してデータ取得。今回は全量を検索
-      const res = await fireStoreDB.collection('bookMark').get();
-      if (res.empty) return [];
-      const BookMarkList = [];
-      // DocumentData型にはmapメソッドが定義されていないため、forEachのループでデータを加工
-      res.forEach(doc => {
-          BookMarkList.push(doc.data());
-      })
-      setBookMark(BookMarkList);
-    }
-
-    searchBookMark();
-    setLoading(false);
-}, []);
-
     return (
       < >
          {/* <ModalEventListDetails modalIsOpenDetails={modalIsOpenDetails} setIsOpenDetails={setIsOpenDetails} img={img} contents={contents} /> */}
@@ -81,10 +62,18 @@ export default function ModalEventListBookMark({ modalIsOpenBookMark, setIsOpenB
           // スタイリングを定義
           style={customStyles}
         >
-
           {
             auth.currentUser
-              ? bookMark.map((value, index) => {
+              ? async function () {
+                const fireStoredb = await fireStoreDB.collection('bookMark').get();
+                const query = [];
+
+                await fireStoredb.docs.map((doc) => {
+                  query.push(doc.data())
+                });
+                console.log(query);
+                await query.map((value, index) => {
+                     
                   if (value.uid === firebaseUser().uid) {
                     return (
                       <div
@@ -110,49 +99,9 @@ export default function ModalEventListBookMark({ modalIsOpenBookMark, setIsOpenB
                       <div></div>
                     )
                   }
-                })
+                });
+              }
               : <div>n</div>
-          }
-          {
-            // auth.currentUser
-            //   ? async function () {
-            //     const fireStoredb = await fireStoreDB.collection('bookMark').get();
-            //     const query = [];
-
-            //     await fireStoredb.docs.map((doc) => {
-            //       query.push(doc.data())
-            //     });
-            //     console.log(query);
-            //     await query.map((value, index) => {
-                     
-            //       if (value.uid === firebaseUser().uid) {
-            //         return (
-            //           <div
-            //             key={index}
-            //             onClick={() => {
-            //               setIsOpenDetails(true);
-            //               setImg(value.thumbnail);
-            //               setContents(value.contents);
-            //             }}
-            //             style={{
-            //               margin: '10px',
-            //               flexGrow: 1,
-            //               width: '30vh'
-            //             }}>
-                                  
-            //             <li style={{ color: 'white' }} >{value.title}</li>
-            //             {/* <button>💛</button> */}
-            //             <img src={value.thumbnail} style={{ width: '100%', maxWidth: '450px' }} />
-            //           </div>
-            //         )
-            //       } else {
-            //         return (
-            //           <div></div>
-            //         )
-            //       }
-            //     });
-            //   }
-            //   : <div>n</div>
           }
         </Modal>
 
