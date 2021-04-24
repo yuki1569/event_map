@@ -34,20 +34,19 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     width:'100%',
     position: 'fixed',
-    top:'11vh',
-    zIndex: 9,
+    top:'8vh',
+    zIndex: 50,
     flexDirection: 'column',
     alignItems: 'center',
     textAlign:'center',
-    height: '82vh',
+    height: '86vh',
     backgroundColor:'rgba(10,0,0,0.3)'
   },
 
   paper: {
     marginTop: theme.spacing(10),
     display: 'flex',
-    zIndex:9,
-    // flexDirection: 'column',
+    zIndex:11,
     alignItems: 'center',
     
   },
@@ -201,34 +200,3 @@ export default function SignIn() {
       </div>
   );
 }
-
-
-// const Test = () => (
-//   // <Layout title="Home | Next.js + TypeScript Example">
-//   <>
-//     <h1>Hello Next.js 👋</h1>
-//     <div>
-//       <button onClick={() => Login()}>ログイン</button>
-//       <button onClick={() => Logout()}>ログアウト</button>
-//     </div>
-//     <div>
-//       <pre>
-//         {auth.currentUser
-//           ? dataBase.map((value, index) =>
-//               <div key={index}>
-//               <li style={{color:'white'}} >{value.title}</li>
-//               <img src={value.thumbnail} style={{ width:'100%', maxWidth:'450px'}}/>
-//               </div>
-//               )
-//           : ''
-//         }
-//         {/* {auth.currentUser
-//           ? auth.currentUser.displayName + "でログインしています"
-//           : "ログインしていません"} */}
-//       </pre>
-//     </div>
-//   </>
-//   // </Layout>
-// );
-
-// export default Test;

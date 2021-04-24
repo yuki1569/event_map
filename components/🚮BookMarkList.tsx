@@ -58,29 +58,29 @@ export default function BookMarkList({ bookMarkListUpDate }
   const [contents, setContents] = useState('');
 
   const [loading, setLoading] = useState(true);
-  const [bookMark, setBookMark] = useState([]);
+  const [eventList, setEventList] = useState([]);
   const [listUpDate, setListUpDate] = useState(true);
   
   useEffect(() => {
     const searchBookMark = async() => {
       // Firestoreのコレクションを指定してデータ取得。今回は全量を検索
-      const res = await fireStoreDB.collection('bookMark').get();
+      const res = await fireStoreDB.collection('eventList').get();
       if (res.empty) return [];
-      const BookMarkList = [];
+      const EventList = [];
       // DocumentData型にはmapメソッドが定義されていないため、forEachのループでデータを加工
       res.forEach(doc => {
-          BookMarkList.push(doc.data());
+          EventList.push(doc.data());
       })
       
-      setBookMark(BookMarkList);
+      setEventList(EventList);
     }
 
     searchBookMark();
     setLoading(true);
 }, [listUpDate]);
 
-    return bookMark
-          {
+    return eventList
+//           {
             // auth.currentUser
             //   ? bookMark.map((value, index) => {
             //       if (value.uid === firebaseUser().uid) {

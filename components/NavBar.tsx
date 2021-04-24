@@ -10,7 +10,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -18,7 +17,7 @@ import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/sty
 import { useRouter } from 'next/router'
 import  SerchTextBox from './SerchTextBox'
 
-const drawerWidth = 240;
+const drawerWidth = 220;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.up('sm')]: {
         width: drawerWidth,
         flexShrink: 0,
+        
       },
     },
     // appBar: {
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
     //   },
     // },
     toolBar: {
-      height: '11vh'
+      height: '9vh'
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -199,7 +199,6 @@ export default function NavBar(props: Props) {
           <Typography variant="h6" noWrap>
             Responsive drawer
           </Typography>
-          <SerchTextBox />
         </Toolbar>
       </AppBar>
       

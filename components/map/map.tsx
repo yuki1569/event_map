@@ -10,10 +10,10 @@ import {
   auth,
   fireStoreDB,
   firebaseUser,
-  bookMarkQuery,
 } from "../../src/firebase";
 import Geocode from "react-geocode";
 import ModalEventList from "../ModalEventList"
+import SearchTextField from '../SearchTextField'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,16 +32,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const APIKEY = "";
 Geocode.setApiKey(`${process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}`);
-
-// export async function createEventGet() {
-//   const fireStoredb = await fireStoreDB.collection('createEvent').get();
-//   const createEventList = []
-//   await fireStoredb.docs.map((doc) => {
-//     createEventList.push(doc.data())
-//     });
-//   // console.log(query);
-//   return createEventList ;
-// }
 
 export default function CreateMaps() {
   const createMapOptions = (maps: Maps): MapOptions => {
@@ -233,7 +223,6 @@ export default function CreateMaps() {
     }
   }
 
-  // const classes = useStyles();
   const [center, setCenter] = useState({ lat: 34.665442, lng: 135.432338 });
   const [zoom, setZoom] = useState(13);
   const [currentPosition, setCurrentPosition] = useState({
@@ -246,11 +235,14 @@ export default function CreateMaps() {
   const [contents, setContents] = useState("");
   const [modalIsOpenEventList, setIsOpenEventList] = useState(false);
   const [modalHidden, setmodallHidden] = useState(true)
+  // const [searchValue, setSearchValue] = useState([])
+  const [stateEventList, setStateEventList] = useState([])
+
  
 
   //イベントリストで要素をクリックしたときに位置が変わる
   const changeMapCenter = (isState) => {
-　setCenter(isState)
+  setCenter(isState)
 }
 
   // 初期表示地点
@@ -283,7 +275,6 @@ export default function CreateMaps() {
   getgeolocation();
 
   const handleApiLoaded = ({ map, maps }) => {
-
   async function getFireStoreEventList() {
     const fireStoredb = await fireStoreDB.collection('eventList').get();
     const eventList = []
@@ -291,6 +282,8 @@ export default function CreateMaps() {
       eventList.push(doc.data())
       console.log(eventList)
     });
+    setStateEventList(eventList)
+    // setStateEventList(eventList)
     await eventList.map((db) => {
       let lat = Number(db.longitudeLatitude[0])
       let lng = Number(db.longitudeLatitude[1])
@@ -300,7 +293,7 @@ export default function CreateMaps() {
         // title: beach[0],
         // zIndex: beach[3],
       }).addListener("click", () => {
-        map.setCenter({ lat: (lat - 0.015), lng: lng });
+        map.setCenter({ lat: (lat - 0.011), lng: lng });
         map.setZoom(14);
         setIsOpenBottom(true);
         setImg(db.thumbnail);
@@ -332,6 +325,7 @@ export default function CreateMaps() {
     })
   }
   getFireStoreEventList();
+  console.log(stateEventList)
 
   async function getFireStoreCreateEvent() {
       const fireStoredb = await fireStoreDB.collection('createEvent').get();
@@ -348,7 +342,7 @@ export default function CreateMaps() {
           position: { lat: lat, lng: lng },
           map,
         }).addListener("click", () => {
-          map.setCenter({ lat: (lat - 0.015), lng: lng });
+          map.setCenter({ lat: (lat - 0.011), lng: lng });
           map.setZoom(14);
           setIsOpenBottom(true);
           setImg(db.thumbnail);
@@ -367,6 +361,22 @@ export default function CreateMaps() {
   useEffect(() => {
   setCenter(center)
   }, [center])
+
+  useEffect(() => {
+  setZoom(zoom)
+  
+  }, [zoom])
+
+  // useEffect(() => {
+  //   setSearchValue(searchValue)
+  //   console.log('検索されました')
+  //   console.log(searchValue)
+  // }, [searchValue])
+
+  // useEffect(() => {
+  //   setStateEventList(value)
+  //   console.log('検索されました')
+  // }, [stateEventList])
   
 async function successCallback(position){
     // 緯度・経度を取得しcenterを更新
@@ -381,6 +391,8 @@ async function successCallback(position){
   // 取得に成功した場合の処理
   return(
     <>
+      {/* <SearchTextField setSearchValue={setSearchValue}/> */}
+
       <BottomMenuBar 
         setmodallHidden={setmodallHidden}
         modalHidden={modalHidden}
@@ -402,47 +414,40 @@ async function successCallback(position){
           
       <div
         style={{
-          height: "82vh",
+          height: "84vh",
           width: "100%",
           position: "fixed",
-          top: "11vh",
+          top: "9vh",
           zIndex: 1,
         }}
       >
+
         {
-          center === { lat: 0, lng: 0 }
-            ? <div></div>
+        center === { lat: 0, lng: 0 }
+        ? <div></div>
         : 
         <div
         style={{
           position: 'fixed',
           zIndex:20,
           right:'10px',
-          bottom: '17vh',
+          bottom: '18vh',
         }}
-        onClick={() =>
+   
+        onClick={() => {
           navigator.geolocation.getCurrentPosition(successCallback)
-          }
-      >
+          setZoom(14)
+        }}
+        >
         <MyLocationButton />
-      </div>
+        </div>
         }
-        {/* <a
-          style={ {position:'fixed',zIndex:10} }
-          onClick={() =>
-          // setIsOpenEventList(true)
-          }>ボタン
-          </a>
-        <a
-          style={ {position:'fixed',top:'100px',zIndex:12} }
-          onClick={() =>
-          }>ボタン2
-          </a> */}
-        
+
         <GoogleMapReact
           bootstrapURLKeys={{ key: APIKEY }}
           center={{ lat: center.lat, lng: center.lng }}
-          defaultZoom={zoom}
+          defaultZoom={14}
+          zoom={zoom}
           onGoogleApiLoaded={handleApiLoaded}
           options={createMapOptions}
         >

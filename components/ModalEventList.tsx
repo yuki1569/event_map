@@ -2,7 +2,6 @@ import Modal from 'react-modal'
 import ModalEventListDetails from './ModalEventListDetails'
 import { useState,useEffect,ReactElement, } from "react";
 import {  auth, fireStoreDB, firebaseUser } from '../src/firebase';
-import { eventDB } from '../lib/db'
 import { useRouter } from 'next/router'
 import IconButton from '@material-ui/core/IconButton';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
@@ -11,6 +10,8 @@ import Geocode from "react-geocode";
 import { useScroll } from './useScroll';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import ModalCloseButton from './Button/ModalCloseButton';
+import SearchTextField from './SearchTextField'
+
 
 export default function ModalEventList({setmodallHidden,modalHidden,
   // modalIsOpenEventList, setIsOpenEventList,
@@ -52,9 +53,8 @@ const customStyles = {
   }
 };
 
-  
   const [modalIsOpenDetails, setIsOpenDetails] = useState(false);
-  const [eventList, setEventList] = useState(eventDB);
+  const [eventList, setEventList] = useState([]);
   const [currentPosition, setCurrentPosition] = useState({
     lat: 34.673542,
     lng: 135.433338,
@@ -68,6 +68,30 @@ const customStyles = {
   const [listUpDate, setListUpDate] = useState(true);
   const [bookMark, setBookMark] = useState([]);
 
+  const [searchValue, setSearchValue] = useState([])
+
+  useEffect(() => {
+    setSearchValue(searchValue)
+
+    console.log('検索されました')
+    console.log(searchValue)
+    setEventList(searchValue)
+  }, [searchValue])
+
+  
+  useEffect(() => {
+    const searchEventList = async() => {
+      const res = await fireStoreDB.collection('eventList').get();
+      if (res.empty) return [];
+      const EventList = [];
+      res.forEach(doc => {
+          EventList.push(doc.data());
+      })
+      
+      setEventList(EventList);
+    }
+    searchEventList();
+  }, []);
   
   useEffect(() => {
     const searchBookMark = async() => {
@@ -101,7 +125,7 @@ const customStyles = {
  
   function sortDateAscendingOrder
     () {
-    eventDB.sort(function (a, b) {
+    eventList.sort(function (a, b) {
       if (a.endDate > b.endDate) {
         return 1;
       } else {
@@ -109,14 +133,14 @@ const customStyles = {
       }
     })
     const db = []
-    eventDB.map(event => {
+    eventList.map(event => {
       db.push(event)
     })
     return db
   }
   function sortDateDescendingOrder
     () {
-    eventDB.sort(function (a, b) {
+    eventList.sort(function (a, b) {
       if (a.endDate < b.endDate) {
         return 1;
       } else {
@@ -124,14 +148,14 @@ const customStyles = {
       }
     })
     const db = []
-    eventDB.map(event => {
+    eventList.map(event => {
       db.push(event)
     })
     return db
   }
   function sortDistanceAscendingOrder
     () {
-    eventDB.sort(function (a, b) {
+    eventList.sort(function (a, b) {
       let A = distance(currentPosition.lat, currentPosition.lng, a.longitudeLatitude[0], a.longitudeLatitude[1])
       let B = distance(currentPosition.lat, currentPosition.lng, b.longitudeLatitude[0], b.longitudeLatitude[1])
       if (A > B) {
@@ -141,14 +165,14 @@ const customStyles = {
       }
     })
     const db = []
-    eventDB.map(event => {
+    eventList.map(event => {
       db.push(event)
     })
     return db
   }
   function sortDistanceDescendingOrder
     () {
-    eventDB.sort(function (a, b) {
+    eventList.sort(function (a, b) {
       let A = distance(currentPosition.lat, currentPosition.lng, a.longitudeLatitude[0], a.longitudeLatitude[1])
       let B = distance(currentPosition.lat, currentPosition.lng, b.longitudeLatitude[0], b.longitudeLatitude[1])
       if (A < B) {
@@ -158,28 +182,12 @@ const customStyles = {
       }
     })
     const db = []
-    eventDB.map(event => {
+    eventList.map(event => {
       db.push(event)
     })
     return db
   }
-  function sortBookMark
-    () {
-    eventDB.sort(function (a, b) {
-      let A = distance(currentPosition.lat, currentPosition.lng, a.longitudeLatitude[0], a.longitudeLatitude[1])
-      let B = distance(currentPosition.lat, currentPosition.lng, b.longitudeLatitude[0], b.longitudeLatitude[1])
-      if (A < B) {
-        return 1;
-      } else {
-        return -1;
-      }
-    })
-    const db = []
-    eventDB.map(event => {
-      db.push(event)
-    })
-    return db
-  }
+
 
   // 現在位置取得取得
   function getgeolocation() {
@@ -213,10 +221,11 @@ const customStyles = {
   return (
     <div >
       
+
+
       {/* リストごとの詳細画面用モーダル */}
       <ModalEventListDetails modalIsOpenDetails={modalIsOpenDetails} setIsOpenDetails={setIsOpenDetails} img={img} contents={contents} />
        {/* リストごとの詳細画面用モーダル */}
-      
 
       {/* イベントリストモーダルを閉じるボタン */}
       <div
@@ -244,6 +253,8 @@ const customStyles = {
         // onRequestClose={() => setIsOpenEventList(false)}
         style={customStyles}
       >
+        <SearchTextField setSearchValue={setSearchValue} />
+
         <div id='button'>
               <button
                 onClick={() => {
@@ -342,7 +353,7 @@ const customStyles = {
           margin: '10px',
           flexGrow: 1,
           width: '30vh'
-}}>
+        }}>
 {
   console.log(
             distance(currentPosition.lat, currentPosition.lng, value.longitudeLatitude[0], value.longitudeLatitude[1])

@@ -87,6 +87,7 @@ export default function BottomMenuBar(
             color="inherit"
             className={classes.icon}
             onClick={() => {
+              router.push('/');
               props.setmodallHidden(!modalHidden)
               // setIsOpen(!modalIsOpen);
               // setIsOpenBookMark(false);

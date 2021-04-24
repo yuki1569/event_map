@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth"; 
 import "firebase/firestore"; 
-import { eventDB } from '../lib/db'
+// import { eventDB } from '../lib/db'
 
 export const config = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -83,27 +83,27 @@ export const Logout = () => {
   });
 };
 
-export const bookMarkQuery = () => {
-    const query = []
-    const eventListDbQuery = [
-    ]
-    //ログイン中のユーザーのブックマークリストのイベントIDを配列queryに代入
-    fireStoreDB.collection('bookMark').get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        doc.data().uid === firebaseUser().uid
-          ? query.push(doc.data().id)
-          : ''
-      });
-      return query
-    }).then((value) => {
-      value.map(que =>
-        // console.log(que)
-        eventListDbQuery.push(
-          eventDB.filter((db) => {
-          return db.id == que
-          })
-        )
-      );
-    })
-    return eventListDbQuery;
-}
+// export const bookMarkQuery = () => {
+//     const query = []
+//     const eventListDbQuery = [
+//     ]
+//     //ログイン中のユーザーのブックマークリストのイベントIDを配列queryに代入
+//     fireStoreDB.collection('bookMark').get().then((querySnapshot) => {
+//       querySnapshot.forEach((doc) => {
+//         doc.data().uid === firebaseUser().uid
+//           ? query.push(doc.data().id)
+//           : ''
+//       });
+//       return query
+//     }).then((value) => {
+//       value.map(que =>
+//         // console.log(que)
+//         eventListDbQuery.push(
+//           eventDB.filter((db) => {
+//           return db.id == que
+//           })
+//         )
+//       );
+//     })
+//     return eventListDbQuery;
+// }
