@@ -363,21 +363,10 @@ export default function CreateMaps() {
   }, [center])
 
   useEffect(() => {
-  setZoom(zoom)
-  
+    setZoom(zoom)
   }, [zoom])
 
-  // useEffect(() => {
-  //   setSearchValue(searchValue)
-  //   console.log('検索されました')
-  //   console.log(searchValue)
-  // }, [searchValue])
 
-  // useEffect(() => {
-  //   setStateEventList(value)
-  //   console.log('検索されました')
-  // }, [stateEventList])
-  
 async function successCallback(position){
     // 緯度・経度を取得しcenterを更新
     let latitude:number = await position.coords.latitude;
@@ -385,6 +374,10 @@ async function successCallback(position){
 
   await setCenter({ lat: latitude+0.00001, lng: longitude+0.00001 })
   await setCenter({ lat: latitude, lng: longitude })
+};
+async function initizalZoomValue(){
+  await setZoom(13)
+  await setZoom(14)
 };
 
 
@@ -433,10 +426,9 @@ async function successCallback(position){
           right:'10px',
           bottom: '18vh',
         }}
-   
         onClick={() => {
           navigator.geolocation.getCurrentPosition(successCallback)
-          setZoom(14)
+           initizalZoomValue()
         }}
         >
         <MyLocationButton />

@@ -1,5 +1,5 @@
 // import Layout from "../components/Layout";
-import { Login, Logout, auth } from "../../src/firebase";
+import { Login, Logout, auth,firebaseUser } from "../../src/firebase";
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -71,23 +71,22 @@ export default function SignIn() {
       {/* <CssBaseline /> */}
       
       {auth.currentUser
-        ? <div className={classes.paper}>
-          <h3>ログイン中です</h3>
-          {/* {
-        dataBase.map((value, index) =>
-          <div key={index}>
-            <li style={{ color: 'white' }} >{value.title}</li>
-            <img src={value.thumbnail} style={{ width: '100%', maxWidth: '450px' }} />
-          </div>
-        )
-      } */}
+        ? <div style={{backgroundColor:'white',width:'100%',position:'fixed',bottom:'7vh'}}>
+          <h2>{firebaseUser().email}でログイン中です</h2>
           < Button
             onClick={() => Logout()}
             style={{marginBottom:'50px'}}
-       >
+          >
           <span style={{ fontSize: 16 }}>
-                 ログアウト
-               </span></Button>
+              ログアウト
+          </span></Button>
+          <ul>
+            <li>プロフィールを更新</li>
+            <li>メールアドレスの登録・変更</li>
+            <li>お住まいの地域</li>
+            <li>設定・規約・よくある質問</li>
+            <li></li>
+          </ul>
         </div>
         : <>
           <div className={classes.center}>

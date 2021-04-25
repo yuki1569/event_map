@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import React ,{ useState } from 'react';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
+import { createStyles,useTheme, Theme, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import IconButton from '@material-ui/core/IconButton';
@@ -12,19 +12,60 @@ import MapIcon from '@material-ui/icons/Map';
 import { auth, fireStoreDB, firebaseUser } from '../src/firebase';
 import AddButtons from './Button/AddButton';
 import ModalAddWindow from './ModalAddWidow'
+import Drawer from '@material-ui/core/Drawer';
+import AddForm from './AddForm'
+import DrawerCloseButton from './Button/DrawerCloseButton'
+
+
+
+// const drawerWidth = 500;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     appBar: {
-      // height: '7vh',
       top: 'auto',
       bottom: 0,
     },
-    icon: {
-      // textAlign: 'center'
-    }
+    root: {
+      display: 'flex',
+    },
+    // drawer: {
+    //   [theme.breakpoints.up('sm')]: {
+    //     width:500,
+    //     flexShrink: 0,
+        
+    //   },
+    // },
+    toolBar: {
+      height: '9vh'
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+      [theme.breakpoints.up('sm')]: {
+        display: 'none',
+      },
+    },
+    // necessary for content to be below app bar
+    toolbar: theme.mixins.toolbar,
+    drawerPaper: {
+
+      [theme.breakpoints.up('sm')]: {
+        width:500,
+        flexShrink: 0,
+      },
+      [theme.breakpoints.down('xs')]: {
+        width:'100%',
+        flexShrink: 0,
+      },
+    },
+    content: {
+      // flexGrow: 1,
+      padding: theme.spacing(2),
+    },
   }),
 );
+
+
 
 export default function BottomMenuBar(
   props,
@@ -33,8 +74,10 @@ export default function BottomMenuBar(
 ) {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [addDrawerOpen, setAddDrawerOpen] = useState(false);
   const router = useRouter();
-  
+  const theme = useTheme();
+
 
   return (
     <React.Fragment >
@@ -46,6 +89,41 @@ export default function BottomMenuBar(
       </div>
       {/* <CssBaseline /> */}
 
+      <Drawer
+            // container={container}
+            variant="temporary"
+            anchor={theme.direction === 'rtl' ? 'left' : 'right'}
+            open={addDrawerOpen}
+            // onClose={handleDrawerToggle}
+            // open={mobileOpen}
+            // onClose={handleDrawerToggle}
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+      >
+        <AddForm />
+        <div
+        style={{
+          position: 'fixed',
+          zIndex:20,
+          right:'10px',
+          bottom: '8vh',
+          
+        }}
+        onClick={() => {
+          // setIsOpen(!modalIsOpen);
+          setAddDrawerOpen(!addDrawerOpen)
+        }}
+      >
+      <DrawerCloseButton />
+      </div>
+        {/* {drawer} */}
+        
+      </Drawer>
+
       <div
         style={{
           position: 'fixed',
@@ -55,7 +133,8 @@ export default function BottomMenuBar(
           
         }}
         onClick={() => {
-          setIsOpen(!modalIsOpen);
+          // setIsOpen(!modalIsOpen);
+          setAddDrawerOpen(!addDrawerOpen)
         }}
       >
       <AddButtons />
@@ -73,7 +152,7 @@ export default function BottomMenuBar(
 
           <IconButton
             color="inherit"
-            className={classes.icon}
+            // className={classes.icon}
             onClick={() => {
               router.push('/');
               props.setmodallHidden(true);
@@ -85,7 +164,7 @@ export default function BottomMenuBar(
 
           <IconButton
             color="inherit"
-            className={classes.icon}
+            // className={classes.icon}
             onClick={() => {
               router.push('/');
               props.setmodallHidden(!modalHidden)
@@ -113,7 +192,7 @@ export default function BottomMenuBar(
 
           <IconButton
             color="inherit"
-            className={classes.icon}
+            // className={classes.icon}
             onClick={() => {
               router.push('/csr/login');
               props.setmodallHidden(true);

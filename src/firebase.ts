@@ -82,28 +82,3 @@ export const Logout = () => {
     window.location.reload();
   });
 };
-
-// export const bookMarkQuery = () => {
-//     const query = []
-//     const eventListDbQuery = [
-//     ]
-//     //ログイン中のユーザーのブックマークリストのイベントIDを配列queryに代入
-//     fireStoreDB.collection('bookMark').get().then((querySnapshot) => {
-//       querySnapshot.forEach((doc) => {
-//         doc.data().uid === firebaseUser().uid
-//           ? query.push(doc.data().id)
-//           : ''
-//       });
-//       return query
-//     }).then((value) => {
-//       value.map(que =>
-//         // console.log(que)
-//         eventListDbQuery.push(
-//           eventDB.filter((db) => {
-//           return db.id == que
-//           })
-//         )
-//       );
-//     })
-//     return eventListDbQuery;
-// }

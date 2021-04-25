@@ -21,8 +21,11 @@ const SearchTextField = (props) => {
       const res = await fireStoreDB.collection('eventList').get();
       if (res.empty) return [];
       const EventList = [];
-      res.forEach(doc => {
-          EventList.push(doc.data());
+      const key = [];
+
+      res.docs.map((doc,index) => {
+        EventList.push(doc.data());
+        key.push(index)
       })
       
       setEventList(EventList);

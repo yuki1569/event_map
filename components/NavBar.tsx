@@ -15,7 +15,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
 import { useRouter } from 'next/router'
-import  SerchTextBox from './SerchTextBox'
 
 const drawerWidth = 220;
 
@@ -106,7 +105,9 @@ export default function NavBar(props: Props) {
       <Divider />
       <List>
         {MENU_LIST.map(({ title, icon, href }, index) => (
+          <div key={index}>
           <ListItem
+            
             button
             key={title}
             onClick={() => {
@@ -118,6 +119,7 @@ export default function NavBar(props: Props) {
             <ListItemIcon>{icon}</ListItemIcon>
             <ListItemText primary={title} />
           </ListItem>
+          </div>
         ))}
       </List>
       {/* <Divider /> */}
@@ -158,7 +160,7 @@ export default function NavBar(props: Props) {
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer
-            container={container}
+            // container={container}
             variant="temporary"
             anchor={theme.direction === 'rtl' ? 'right' : 'left'}
             open={mobileOpen}
@@ -196,9 +198,11 @@ export default function NavBar(props: Props) {
           >
             <MenuIcon />
           </IconButton>
+
           <Typography variant="h6" noWrap>
             Responsive drawer
           </Typography>
+          
         </Toolbar>
       </AppBar>
       

@@ -7,7 +7,6 @@ import IconButton from '@material-ui/core/IconButton';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Geocode from "react-geocode";
-import { useScroll } from './useScroll';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import ModalCloseButton from './Button/ModalCloseButton';
 import SearchTextField from './SearchTextField'
@@ -79,37 +78,41 @@ const customStyles = {
   }, [searchValue])
 
   
-  useEffect(() => {
-    const searchEventList = async() => {
-      const res = await fireStoreDB.collection('eventList').get();
-      if (res.empty) return [];
-      const EventList = [];
-      res.forEach(doc => {
-          EventList.push(doc.data());
-      })
-      
-      setEventList(EventList);
-    }
-    searchEventList();
-  }, []);
-  
-  useEffect(() => {
-    const searchBookMark = async() => {
-      // Firestoreのコレクションを指定してデータ取得。今回は全量を検索
-      const res = await fireStoreDB.collection('bookMark').get();
-      if (res.empty) return [];
-      const BookMarkList = [];
-      // DocumentData型にはmapメソッドが定義されていないため、forEachのループでデータを加工
-      res.forEach(doc => {
-          BookMarkList.push(doc.data());
-      })
-      
-      setBookMark(BookMarkList);
-    }
+  // useEffect(() => {
+  //   const searchEventList = async() => {
+  //     const res = await fireStoreDB.collection('eventList').get();
+  //     if (res.empty) return [];
+  //     const EventList = [];
+  //     const key = [];
+  //     res.docs.map((doc,index) => {
+  //       EventList.push(doc.data());
+  //       key.push(index)
+  //     })
 
-    searchBookMark();
-    // setLoading(true);
-}, [listUpDate]);
+      
+  //     setEventList(EventList);
+  //   }
+  //   searchEventList();
+  // }, []);
+  
+//   useEffect(() => {
+//     const searchBookMark = async() => {
+//       const res = await fireStoreDB.collection('bookMark').get();
+//       if (res.empty) return [];
+//       const BookMarkList = [];
+//       const key = [];
+
+//       res.docs.map((doc,index) => {
+//         BookMarkList.push(doc.data());
+//         key.push(index)
+//       })
+      
+//       setBookMark(BookMarkList);
+//     }
+
+//     searchBookMark();
+//     // setLoading(true);
+// }, [listUpDate]);
 
 
     // 2点間座標のの距離を求める

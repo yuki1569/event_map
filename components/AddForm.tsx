@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     marginTop: '50px',
+    
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
