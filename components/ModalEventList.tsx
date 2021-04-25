@@ -2,19 +2,15 @@ import Modal from 'react-modal'
 import ModalEventListDetails from './ModalEventListDetails'
 import { useState,useEffect,ReactElement, } from "react";
 import {  auth, fireStoreDB, firebaseUser } from '../src/firebase';
-import { useRouter } from 'next/router'
 import IconButton from '@material-ui/core/IconButton';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import Geocode from "react-geocode";
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import ModalCloseButton from './Button/ModalCloseButton';
 import SearchTextField from './SearchTextField'
 
 
 export default function ModalEventList({setmodallHidden,modalHidden,
   // modalIsOpenEventList, setIsOpenEventList,
-  changeMapCenter}) {
+  changeMapCenter,EventList}) {
   
   function toggle(bool) {
     if (bool) {
@@ -53,7 +49,7 @@ const customStyles = {
 };
 
   const [modalIsOpenDetails, setIsOpenDetails] = useState(false);
-  const [eventList, setEventList] = useState([]);
+  const [eventList, setEventList] = useState(EventList);
   const [currentPosition, setCurrentPosition] = useState({
     lat: 34.673542,
     lng: 135.433338,
@@ -61,8 +57,6 @@ const customStyles = {
   const [img, setImg] = useState('');
   const [contents, setContents] = useState('');
   const [favoritehide, setfavoritehide] = useState(true);
-  const [bookMarkListUpDate, setbookMarkListUpDate] = useState(true);
-   
 
   const [listUpDate, setListUpDate] = useState(true);
   const [bookMark, setBookMark] = useState([]);
@@ -71,51 +65,29 @@ const customStyles = {
 
   useEffect(() => {
     setSearchValue(searchValue)
-
-    console.log('検索されました')
-    console.log(searchValue)
     setEventList(searchValue)
   }, [searchValue])
 
-  
-  // useEffect(() => {
-  //   const searchEventList = async() => {
-  //     const res = await fireStoreDB.collection('eventList').get();
-  //     if (res.empty) return [];
-  //     const EventList = [];
-  //     const key = [];
-  //     res.docs.map((doc,index) => {
-  //       EventList.push(doc.data());
-  //       key.push(index)
-  //     })
+  useEffect(() => {
+    const searchBookMark = async() => {
+      const res = await fireStoreDB.collection('bookMark').get();
+      if (res.empty) return [];
+      const BookMarkList = [];
+      const key = [];
 
+      res.docs.map((doc,index) => {
+        BookMarkList.push(doc.data());
+        key.push(index)
+      })
       
-  //     setEventList(EventList);
-  //   }
-  //   searchEventList();
-  // }, []);
-  
-//   useEffect(() => {
-//     const searchBookMark = async() => {
-//       const res = await fireStoreDB.collection('bookMark').get();
-//       if (res.empty) return [];
-//       const BookMarkList = [];
-//       const key = [];
+      setBookMark(BookMarkList);
+    }
 
-//       res.docs.map((doc,index) => {
-//         BookMarkList.push(doc.data());
-//         key.push(index)
-//       })
-      
-//       setBookMark(BookMarkList);
-//     }
-
-//     searchBookMark();
-//     // setLoading(true);
-// }, [listUpDate]);
+    searchBookMark();
+}, [listUpDate]);
 
 
-    // 2点間座標のの距離を求める
+    // 2点間座標のの距離を求める関数
   function distance(lat1, lng1, lat2, lng2) {
     lat1 *= Math.PI / 180;
     lng1 *= Math.PI / 180;
@@ -123,7 +95,6 @@ const customStyles = {
     lng2 *= Math.PI / 180;
     return Math.round(6371 * Math.acos(Math.cos(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1) + Math.sin(lat1) * Math.sin(lat2)) * 10) / 10;
   }
-  // console.log(distance(currentPosition.lat, currentPosition.lng, 33.5734523, 130.4124632))
 
  
   function sortDateAscendingOrder
@@ -213,7 +184,6 @@ const customStyles = {
     }, []);
   }
   getgeolocation();
-  console.log(currentPosition);
 
   useEffect(() => {
       setEventList(eventList)
@@ -328,7 +298,7 @@ const customStyles = {
                     )
                   } else {
                     return (
-                      <div></div>
+                      <div>n</div>
                     )
                   }
                 })
@@ -357,20 +327,15 @@ const customStyles = {
           flexGrow: 1,
           width: '30vh'
         }}>
-{
-  console.log(
-            distance(currentPosition.lat, currentPosition.lng, value.longitudeLatitude[0], value.longitudeLatitude[1])
-          )            
 
-            }
 
           <p style={{ color: 'white' }}
             onClick={() => {
               changeMapCenter({lat: Number(value.longitudeLatitude[0]), lng:Number(value.longitudeLatitude[1])})
             }}>
             {distance(currentPosition.lat, currentPosition.lng, value.longitudeLatitude[0], value.longitudeLatitude[1])}km先
-            
           </p>
+
         <li style={{ color: 'white' }} >{value.title}</li>
         <li style={{ color: 'white' }} >{value.period}</li>
         

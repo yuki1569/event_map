@@ -59,12 +59,12 @@ const SearchTextField = (props) => {
     const result = products.filter((product) =>
       searchKeywords.every((kw) => product.title.toLowerCase().indexOf(kw) !== -1)
     );
-    // console.log(result)
     // setFilteredProducts(result.length ? result : ["No Item Found"]);
     setFilteredProducts(result);
   }, [keyword]);
 
   return (
+    <>
     <p style={{
       display:'inline-block',
       zIndex: 30,
@@ -89,12 +89,9 @@ const SearchTextField = (props) => {
           }
         }}
       />
-      {
-        // showLists
-        // ? filteredProducts.map((v, i) => <ListItems key={i} text={v.title} />)
-        // : <a/>
-      }
-    </p>
+
+      </p>
+      </>
   );
 };
 

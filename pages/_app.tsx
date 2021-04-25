@@ -6,7 +6,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../components/theme';
 import NavBar from '../components/NavBar';
 import BottomMenuBar from '../components/BottomMenuBar';
-import Map from '../components/map/map';
 import React, { useReducer, useEffect } from "react";
 import { AppProps } from "next/app";
 import AuthContext from "../src/AuthContext";
@@ -45,7 +44,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <AuthContext.Provider value={state}>
           
           <Component {...pageProps}/>
-        <Map />
 
         </AuthContext.Provider>
         <CssBaseline />

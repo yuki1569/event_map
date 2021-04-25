@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import GoogleMapReact, { MapOptions, Maps }  from "google-map-react";
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
-import OriginalMarker from "./marker";
-import ModalBottom from "../ModalBottom";
-import MyLocationButton from '../Button/MyLocationButton';
-import BottomMenuBar from '../BottomMenuBar';
-import NavBar from '../NavBar'
+import OriginalMarker from "../components/map/marker";
+import ModalBottom from "../components/ModalBottom";
+import MyLocationButton from '../components/Button/MyLocationButton';
+import BottomMenuBar from '../components/BottomMenuBar';
+import NavBar from '../components/NavBar'
 import {
   auth,
   fireStoreDB,
   firebaseUser,
-} from "../../src/firebase";
+} from "../src/firebase";
 import Geocode from "react-geocode";
-import ModalEventList from "../ModalEventList"
-import SearchTextField from '../SearchTextField'
+import ModalEventList from "../components/ModalEventList"
+import SearchTextField from '../components/SearchTextField'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,7 +33,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const APIKEY = "";
 Geocode.setApiKey(`${process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}`);
 
-export default function CreateMaps() {
+export default function CreateMaps({eventList,createEventList}) {
+
   const createMapOptions = (maps: Maps): MapOptions => {
     return {
       mapTypeControlOptions: {
@@ -233,19 +234,37 @@ export default function CreateMaps() {
   const [modalIsOpenBottom, setIsOpenBottom] = useState(false);
   const [img, setImg] = useState("");
   const [contents, setContents] = useState("");
-  const [modalIsOpenEventList, setIsOpenEventList] = useState(false);
   const [modalHidden, setmodallHidden] = useState(true)
-  // const [searchValue, setSearchValue] = useState([])
-  const [stateEventList, setStateEventList] = useState([])
 
- 
+  useEffect(() => {
+  setCenter(center)
+  }, [center])
 
-  //イベントリストで要素をクリックしたときに位置が変わる
-  const changeMapCenter = (isState) => {
+  useEffect(() => {
+    setZoom(zoom)
+  }, [zoom])
+
+//現在位置にマップが戻るようにする関数
+async function successCallback(position){
+  // 緯度・経度を取得しcenterを更新
+  let latitude:number = await position.coords.latitude;
+  let longitude: number = await position.coords.longitude;
+  await setCenter({ lat: latitude+0.00001, lng: longitude+0.00001 })
+  await setCenter({ lat: latitude, lng: longitude })
+  };
+
+//マップのズーム倍率がディフォルト14に戻るようにする関数
+async function initizalZoomValue(){
+  await setZoom(13)
+  await setZoom(14)
+};
+
+//イベントリストで要素をクリックしたときに位置が変わる
+function changeMapCenter(isState) {
   setCenter(isState)
 }
 
-  // 初期表示地点
+//ページ表示時に現在位置を取得してマップ上に表示する関数
   function getgeolocation() {
     const success = (data) => {
       const currentPosition = {
@@ -274,24 +293,15 @@ export default function CreateMaps() {
   }
   getgeolocation();
 
+//マップが読み込まれるときにマーカーなどを配置する関数
   const handleApiLoaded = ({ map, maps }) => {
-  async function getFireStoreEventList() {
-    const fireStoredb = await fireStoreDB.collection('eventList').get();
-    const eventList = []
-    await fireStoredb.docs.map((doc) => {
-      eventList.push(doc.data())
-      console.log(eventList)
-    });
-    setStateEventList(eventList)
-    // setStateEventList(eventList)
-    await eventList.map((db) => {
+    
+      eventList.map((db) => {
       let lat = Number(db.longitudeLatitude[0])
       let lng = Number(db.longitudeLatitude[1])
       new maps.Marker({
         position: { lat: lat, lng: lng },
         map,
-        // title: beach[0],
-        // zIndex: beach[3],
       }).addListener("click", () => {
         map.setCenter({ lat: (lat - 0.011), lng: lng });
         map.setZoom(14);
@@ -299,45 +309,12 @@ export default function CreateMaps() {
         setImg(db.thumbnail);
         setContents(db.contents);
       })
-
-      // Geocode.fromAddress(db.streetAddress).then(
-      //   (response) => {
-      //     const { lat, lng } = response.results[0].geometry.location;
-      //     console.log(lat, lng);
-      //     // let lat = Number(streetadress[0])
-      //     // let lng = Number(streetadress[1])
-      //     new maps.Marker({
-      //       position: { lat: lat, lng: lng },
-      //       map,
-      //       // title: beach[0],
-      //       // zIndex: beach[3],
-      //     }).addListener("click", () => {
-      //       map.setCenter({ lat: lat, lng: lng });
-      //       setIsOpenBottom(true);
-      //       setImg(db.thumbnail);
-      //       setContents(db.contents);
-      //     })
-      //   },
-      //   (error) => {
-      //     console.error(error);
-      //   }
-      // );
     })
-  }
-  getFireStoreEventList();
-  console.log(stateEventList)
 
-  async function getFireStoreCreateEvent() {
-      const fireStoredb = await fireStoreDB.collection('createEvent').get();
-      const createEventList = []
-      await fireStoredb.docs.map((doc) => {
-        createEventList.push(doc.data())
-      });
-      await createEventList.map((db) => {
+      createEventList.map((db) => {
         Geocode.fromAddress(db.streetAddress).then(
           (response) => {
             const { lat, lng }:{lat:number,lng:number} = response.results[0].geometry.location;
-            console.log(lat, lng);
         new maps.Marker({
           position: { lat: lat, lng: lng },
           map,
@@ -355,55 +332,24 @@ export default function CreateMaps() {
         );
       })
   }
-  getFireStoreCreateEvent()
-  }
   
-  useEffect(() => {
-  setCenter(center)
-  }, [center])
 
-  useEffect(() => {
-    setZoom(zoom)
-  }, [zoom])
-
-
-async function successCallback(position){
-    // 緯度・経度を取得しcenterを更新
-    let latitude:number = await position.coords.latitude;
-    let longitude: number = await position.coords.longitude;
-
-  await setCenter({ lat: latitude+0.00001, lng: longitude+0.00001 })
-  await setCenter({ lat: latitude, lng: longitude })
-};
-async function initizalZoomValue(){
-  await setZoom(13)
-  await setZoom(14)
-};
-
-
-  // 取得に成功した場合の処理
   return(
     <>
-      {/* <SearchTextField setSearchValue={setSearchValue}/> */}
-
+      <NavBar/>
       <BottomMenuBar 
         setmodallHidden={setmodallHidden}
         modalHidden={modalHidden}
       />
-      <ModalEventList  setmodallHidden={setmodallHidden} modalHidden={modalHidden}
-          // modalIsOpenEventList={modalIsOpenEventList}
-          // setIsOpenEventList = { setIsOpenEventList }
-          changeMapCenter={changeMapCenter}
-           />
-
-        <NavBar/>
-
-        <ModalBottom
-        modalIsOpenBottom={modalIsOpenBottom}
-        setIsOpenBottom={setIsOpenBottom}
-        img={img}
-        contents={contents}
-          />
+      <ModalEventList  setmodallHidden={setmodallHidden} modalHidden={modalHidden} EventList={eventList}
+      changeMapCenter={changeMapCenter}
+       />
+      <ModalBottom
+      modalIsOpenBottom={modalIsOpenBottom}
+      setIsOpenBottom={setIsOpenBottom}
+      img={img}
+      contents={contents}
+       />
           
       <div
         style={{
@@ -417,7 +363,7 @@ async function initizalZoomValue(){
 
         {
         center === { lat: 0, lng: 0 }
-        ? <div></div>
+        ? <div>n</div>
         : 
         <div
         style={{
@@ -444,18 +390,36 @@ async function initizalZoomValue(){
           options={createMapOptions}
         >
 
-          <OriginalMarker
-            lat={currentPosition.lat}
-            lng={currentPosition.lng}
-            name="My Marker"
-            color="blue"
-          />
-          
-          {/* {isOpen ? (
-          <Baloon lat={currentPosition.lat} lng={currentPosition.lng} />
-        ) : null} */}
+        <OriginalMarker
+          lat={currentPosition.lat}
+          lng={currentPosition.lng}
+          name="My Marker"
+          color="blue"
+        />
+ 
         </GoogleMapReact>
       </div>
     </>
   );
+}
+
+export async function getStaticProps() {
+  const eventList = []
+  const fireStoredbEventList = await fireStoreDB.collection('eventList').get();
+  await fireStoredbEventList.docs.map((doc) => {
+      eventList.push(doc.data())
+  });
+
+  const createEventList = []
+  const fireStoredbCreateEvent = await fireStoreDB.collection('createEvent').get();
+  await fireStoredbCreateEvent.docs.map((doc) => {
+        createEventList.push(doc.data())
+  });
+  
+  return {
+    props: {
+      eventList,
+      createEventList
+    },
+  }
 }

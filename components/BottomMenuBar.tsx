@@ -2,23 +2,16 @@ import { useRouter } from 'next/router'
 import React ,{ useState } from 'react';
 import { createStyles,useTheme, Theme, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonIcon from '@material-ui/icons/Person';
 import MapIcon from '@material-ui/icons/Map';
-import { auth, fireStoreDB, firebaseUser } from '../src/firebase';
 import AddButtons from './Button/AddButton';
 import ModalAddWindow from './ModalAddWidow'
 import Drawer from '@material-ui/core/Drawer';
 import AddForm from './AddForm'
 import DrawerCloseButton from './Button/DrawerCloseButton'
 
-
-
-// const drawerWidth = 500;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

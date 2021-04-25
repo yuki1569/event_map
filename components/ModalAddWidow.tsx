@@ -1,7 +1,4 @@
 import Modal from 'react-modal'
-import ModalEventListDetails from './ModalEventListDetails'
-import { useState } from "react";
-import { fireStoreDB, firebaseUser } from '../src/firebase';
 import AddForm from './AddForm'
 
 

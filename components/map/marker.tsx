@@ -44,11 +44,6 @@ const Marker = (props: any) => {
       </>
   );
   
-  
-  
-
 };
   
-
-
   export default Marker;

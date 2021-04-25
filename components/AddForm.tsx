@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import Alert from '@material-ui/lab/Alert';
 import Backdrop from '@material-ui/core/Backdrop';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
-import Snackbar from '@material-ui/core/Snackbar';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import firebase from 'firebase/app';
-import {  auth, fireStoreDB, firebaseUser } from '../src/firebase';
+import { fireStoreDB, firebaseUser } from '../src/firebase';
 import 'firebase/functions';
 
 const useStyles = makeStyles((theme) => ({
