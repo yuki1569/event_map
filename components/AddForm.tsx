@@ -5,9 +5,14 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import Snackbar from '@material-ui/core/Snackbar';
+import MenuItem from '@material-ui/core/MenuItem';
+import { Alert, AlertTitle } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import { fireStoreDB, firebaseUser } from '../src/firebase';
 import 'firebase/functions';
+import Geocode from "react-geocode";
+
 
 const useStyles = makeStyles((theme) => ({
   textField: {
@@ -34,9 +39,9 @@ export default function AddForm() {
     title: '',
     subTitle: '',
     link:'',
-    period:'',
+    startDate:'',
+    endDate:'',
     genre:'',
-    genre2:'',
     email: '',
     name: '',
     contents: ''
@@ -48,32 +53,74 @@ export default function AddForm() {
     message: ''
   });
 
+  const currencies = [
+  {
+    value: 'USD',
+    label: '$',
+  },
+  {
+    value: 'EUR',
+    label: '€',
+  },
+  {
+    value: 'BTC',
+    label: '฿',
+  },
+  {
+    value: 'JPY',
+    label: '¥',
+  },
+  ];
+
+  Geocode.setApiKey(`${process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}`);
+
+  
+
   //  Submit Button
   const handleSubmit = e => {
     e.preventDefault();
     setLoading(true);
-    
+    Geocode.fromAddress(sendData.place).then(
+          (response) => {
+            const { lat, lng }:{lat:number,lng:number} = response.results[0].geometry.location;
     fireStoreDB.collection('createEvent').add(
       {
-      uid: firebaseUser().uid,
+      postUid: firebaseUser().uid,
       id: Math.random() * 100000,
-      title: sendData.title,
-      subTitle:sendData.subTitle,
-      // thumbnail: sendData.thumbnail,
-      link: sendData.link,
       contents: sendData.contents,
-      period: sendData.period,
-      genre: sendData.genre,
-      genre2: sendData.genre2,
+      link: sendData.link,
+      endDate: sendData.endDate,
+      longitudeLatitude:[ lat, lng ],
+      period: `${sendData.startDate}～${sendData.endDate}`,
+      tagList: sendData.genre,
+      title: sendData.title,
+      subTitle: sendData.subTitle,
       streetAddress: sendData.place,
+      startDate: sendData.startDate,
+      thumbnail: sendData.title
+
+      // thumbnail: sendData.thumbnail,
       }
     )
       .then(() => {
         setSnackBarInfo({
-          severity: 'success', message: 'お問い合わせありがとうございます。送信完了しました。'
+          severity: 'success', message: '投稿完了'
         });
         setSnackBarOpen(true);
         console.log('Successed send mail.');
+        setTimeout(() => { setSnackBarOpen(false) }, 1000);
+        setSendData({
+          place: '',
+          title: '',
+          subTitle: '',
+          link:'',
+          startDate:'',
+          endDate:'',
+          genre:'',
+          email: '',
+          name: '',
+          contents: ''
+        })
         // setSendData({
         //   email: '', name: '', content: ''  
         // });
@@ -88,6 +135,12 @@ export default function AddForm() {
       .finally(() => {
         setLoading(false);
       })
+        
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   };
   // //  Submit Button
   // const handleSubmit = e => {
@@ -121,6 +174,7 @@ export default function AddForm() {
   //  Change TextField
   const handleChange = e => {
     setSendData({ ...sendData, [e.target.name]: e.target.value });
+    
   };
 
   //  Close SnackBar
@@ -134,37 +188,49 @@ export default function AddForm() {
   return (
     <main>
       <Container maxWidth="sm" className={classes.contactForm}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          
+        <Typography variant="h5" component="h1" gutterBottom>
+          新規スポット投稿
         </Typography>
         <TextField 
-          name="place" label="place" type="text" required
+          name="place" label="住所か場所　福岡県福岡市、福岡タワー" type="text" required
           className={classes.textField} value={sendData.place} onChange={handleChange}
         />
         <TextField 
-          name="title" label="title" type="text" required
+          name="title" label="タイトル" type="text" required
           className={classes.textField} value={sendData.title} onChange={handleChange}
         />
         <TextField 
-          name="subTitle" label="subTitle" type="text" required
+          name="subTitle" label="サブタイトル" type="text" required
           className={classes.textField} value={sendData.subTitle} onChange={handleChange}
         />
         <TextField 
-          name="link" label="link" type="text" required
+          name="link" label="ホームページなどのURL" type="text" required
           className={classes.textField} value={sendData.link} onChange={handleChange}
         />
         <TextField 
-          name="period" label="period" type="text" required
-          className={classes.textField} value={sendData.period} onChange={handleChange}
+          name="startDate" label="開始日　2021/04/01" type="text" required
+          className={classes.textField} value={sendData.startDate} onChange={handleChange}
         />
         <TextField 
-          name="genre" label="genre" type="text" required
-          className={classes.textField} value={sendData.genre} onChange={handleChange}
+          name="endDate" label="終了日　2021/04/01" type="text" required
+          className={classes.textField} value={sendData.endDate} onChange={handleChange}
         />
-        <TextField 
-          name="genre2" label="genre2" type="text" required
-          className={classes.textField} value={sendData.genre2} onChange={handleChange}
-        />
+        <TextField
+          name="genre"
+          select
+          label="カテゴリー"
+          value={sendData.genre}
+          className={classes.textField}
+          onChange={handleChange}
+          // helperText="Please select your currency"
+          // variant="outlined"
+        >
+          {currencies.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
         {/* <TextField 
           name="email" label="メールアドレス" type="mail" required
           className={classes.textField} value={sendData.email} onChange={handleChange}
@@ -173,7 +239,7 @@ export default function AddForm() {
           name="name" label="お名前" type="text" required
           className={classes.textField} value={sendData.name} onChange={handleChange}
         /> */}
-        <TextField name="contents" label="Contents" required
+        <TextField name="contents" label="内容" required
           multiline
           rows="8" margin="normal" variant="outlined"
           className={classes.textField} value={sendData.contents} onChange={handleChange}
@@ -191,7 +257,7 @@ export default function AddForm() {
           <CircularProgress color="inherit" />
         </Backdrop>
 
-          {/* <Snackbar open={snackbarOpen}
+          <Snackbar open={snackbarOpen}
             // autoHideDuration={6000}
             onClose={handleSnackBarClose}
             style={{
@@ -201,10 +267,11 @@ export default function AddForm() {
             height:'30px'
             }}
           >
-          <Alert onClose={handleSnackBarClose} severity={snackbarInfo.severity}>
+          <Alert>
+          {/* <Alert onClose={handleSnackBarClose} severity={snackbarInfo.severity}> */}
             {snackbarInfo.message}
           </Alert>
-        </Snackbar> */}
+        </Snackbar>
 
       </Container>
     </main>

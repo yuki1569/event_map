@@ -13,7 +13,8 @@ import {
 } from "../src/firebase";
 import Geocode from "react-geocode";
 import ModalEventList from "../components/ModalEventList"
-import SearchTextField from '../components/SearchTextField'
+import { db } from '../db/db'
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -234,6 +235,10 @@ export default function CreateMaps({eventList,createEventList}) {
   const [modalIsOpenBottom, setIsOpenBottom] = useState(false);
   const [img, setImg] = useState("");
   const [contents, setContents] = useState("");
+  const [link, setLink] = useState("");
+  const [period, setPeriod] = useState("");
+  const [streetAddress, setStreetAddress] = useState("");
+  const [tagList, setTagList] = useState("");
   const [modalHidden, setmodallHidden] = useState(true)
 
   useEffect(() => {
@@ -308,15 +313,21 @@ function changeMapCenter(isState) {
         setIsOpenBottom(true);
         setImg(db.thumbnail);
         setContents(db.contents);
-      })
+        setLink(db.link);
+        setPeriod(db.period);
+        setStreetAddress(db.streetAdress);
+        setTagList(db.tagList);
+      });
     })
 
       createEventList.map((db) => {
-        Geocode.fromAddress(db.streetAddress).then(
-          (response) => {
-            const { lat, lng }:{lat:number,lng:number} = response.results[0].geometry.location;
+        // Geocode.fromAddress(db.streetAddress).then(
+          // (response) => {
+            // const { lat, lng }:{lat:number,lng:number} = response.results[0].geometry.location;
+        const lat =db.longitudeLatitude.lat
+        const lng =db.longitudeLatitude.lng
         new maps.Marker({
-          position: { lat: lat, lng: lng },
+          position: { lat:lat , lng:lng },
           map,
         }).addListener("click", () => {
           map.setCenter({ lat: (lat - 0.011), lng: lng });
@@ -324,12 +335,16 @@ function changeMapCenter(isState) {
           setIsOpenBottom(true);
           setImg(db.thumbnail);
           setContents(db.contents);
+          setLink(db.link);
+          setPeriod(db.period);
+          setStreetAddress(db.streetAdress);
+          setTagList(db.tagList);
         })
-      },
-          (error) => {
-            console.error(error);
-          }
-        );
+      // },
+        //   (error) => {
+        //     console.error(error);
+        //   }
+        // );
       })
   }
   
@@ -341,7 +356,9 @@ function changeMapCenter(isState) {
         setmodallHidden={setmodallHidden}
         modalHidden={modalHidden}
       />
-      <ModalEventList  setmodallHidden={setmodallHidden} modalHidden={modalHidden} EventList={eventList}
+      <ModalEventList setmodallHidden={setmodallHidden} modalHidden={modalHidden}
+      EventList={eventList}
+      CreateEventList={createEventList}
       changeMapCenter={changeMapCenter}
        />
       <ModalBottom
@@ -349,6 +366,11 @@ function changeMapCenter(isState) {
       setIsOpenBottom={setIsOpenBottom}
       img={img}
       contents={contents}
+      link={link}
+      period={period}
+      streetAdress={streetAddress}
+      tagList={tagList}
+      
        />
           
       <div
@@ -360,7 +382,6 @@ function changeMapCenter(isState) {
           zIndex: 1,
         }}
       >
-
         {
         center === { lat: 0, lng: 0 }
         ? <div>n</div>
@@ -404,11 +425,12 @@ function changeMapCenter(isState) {
 }
 
 export async function getStaticProps() {
-  const eventList = []
-  const fireStoredbEventList = await fireStoreDB.collection('eventList').get();
-  await fireStoredbEventList.docs.map((doc) => {
-      eventList.push(doc.data())
-  });
+  const eventList = await db;
+  // const fireStoredbEventList = await fireStoreDB.collection('eventList').get();
+  // await fireStoredbEventList.docs.map((doc) => {
+  //     eventList.push(doc.data())
+  // });
+
 
   const createEventList = []
   const fireStoredbCreateEvent = await fireStoreDB.collection('createEvent').get();

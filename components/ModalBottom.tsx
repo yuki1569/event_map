@@ -1,7 +1,5 @@
 import Modal from 'react-modal'
 
-
-
 const customStyles = {
   overlay: {
     position: "fixed",
@@ -34,11 +32,15 @@ const customStyles = {
 // アプリのルートを識別するクエリセレクタを指定する。
 Modal.setAppElement('#__next')
 
-export default function ModalBottom({ modalIsOpenBottom, setIsOpenBottom, img,contents }: {
+export default function ModalBottom({ modalIsOpenBottom, setIsOpenBottom, img,contents,link,period,streetAdress,tagList }: {
     modalIsOpenBottom: boolean;
     setIsOpenBottom: any;
-    img: any;
-    contents: any;
+    img: string;
+    contents: string;
+    link: string;
+    period: string;
+    streetAdress: string;
+    tagList: string;
 })
 
 {
@@ -60,6 +62,15 @@ export default function ModalBottom({ modalIsOpenBottom, setIsOpenBottom, img,co
             
             <img src={img} style={{ width: '40%', maxWidth:'250px'}}/>
             
+            <li style={{ color: 'white' }}>
+              <a target="_blank" href={link}>サイトへ</a>
+            </li>
+            <li style={{ color: 'white' }}>{period}
+            </li>
+            <li style={{ color: 'white' }}>{streetAdress}
+            </li>
+            <li style={{ color: 'white' }}>{tagList}
+            </li>
             <li style={{ color: 'white' }}>{contents}
             </li>
 

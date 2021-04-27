@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { TextField, ListItem, ListItemText } from "@material-ui/core/";
-import {  auth, fireStoreDB, firebaseUser } from '../src/firebase';
 
 interface Props {
   text: string;
@@ -12,27 +11,10 @@ const ListItems: React.FC<Props> = (props) => (
   </ListItem>
 );
 
-const SearchTextField = (props) => {
-  
-  const [eventList, setEventList] = useState([]);
-  
-  useEffect(() => {
-    const searchEventList = async() => {
-      const res = await fireStoreDB.collection('eventList').get();
-      if (res.empty) return [];
-      const EventList = [];
-      const key = [];
+export default function SearchTextField(props) {
 
-      res.docs.map((doc,index) => {
-        EventList.push(doc.data());
-        key.push(index)
-      })
-      
-      setEventList(EventList);
-    }
-    searchEventList();
-  }, []);
-  const products = eventList
+  //props.EventList = firestoreのeventList
+  const products = props.EventList
 
   const [keyword, setKeyword] = useState("");
   const [showLists, setShowLists] = useState(false);
@@ -56,8 +38,15 @@ const SearchTextField = (props) => {
       return;
     }
 
-    const result = products.filter((product) =>
-      searchKeywords.every((kw) => product.title.toLowerCase().indexOf(kw) !== -1)
+    const result = products.filter((product) => 
+      
+      searchKeywords.every((kw) => 
+        product.tagList.join().toLowerCase().indexOf(kw) !== -1
+        // product.tagList.join().toLowerCase().indexOf(kw) !== -1
+        // product.title.toLowerCase().indexOf(kw) !== -1
+      )
+   
+      // searchKeywords.every((kw) => product.title.toLowerCase().indexOf(kw) !== -1)
     );
     // setFilteredProducts(result.length ? result : ["No Item Found"]);
     setFilteredProducts(result);
@@ -94,5 +83,3 @@ const SearchTextField = (props) => {
       </>
   );
 };
-
-export default SearchTextField;

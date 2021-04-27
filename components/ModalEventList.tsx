@@ -6,11 +6,12 @@ import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ModalCloseButton from './Button/ModalCloseButton';
 import SearchTextField from './SearchTextField'
+import ToggleButtons from '../components/Button/ToggleButoon'
 
 
 export default function ModalEventList({setmodallHidden,modalHidden,
   // modalIsOpenEventList, setIsOpenEventList,
-  changeMapCenter,EventList}) {
+  changeMapCenter,EventList,CreateEventList}) {
   
   function toggle(bool) {
     if (bool) {
@@ -63,6 +64,15 @@ const customStyles = {
 
   const [searchValue, setSearchValue] = useState([])
 
+  const AlleventList= Object.assign(EventList,CreateEventList);
+  const tag = []
+  AlleventList.map(list => {
+    tag.push(list.tagList)
+  })
+
+  console.log(tag);
+  console.log(AlleventList);
+
   useEffect(() => {
     setSearchValue(searchValue)
     setEventList(searchValue)
@@ -97,7 +107,7 @@ const customStyles = {
   }
 
  
-  function sortDateAscendingOrder
+   function sortDateAscendingOrder
     () {
     eventList.sort(function (a, b) {
       if (a.endDate > b.endDate) {
@@ -226,7 +236,12 @@ const customStyles = {
         // onRequestClose={() => setIsOpenEventList(false)}
         style={customStyles}
       >
-        <SearchTextField setSearchValue={setSearchValue} />
+        <SearchTextField setSearchValue={setSearchValue}
+          EventList={EventList} 
+          CreateEventList={CreateEventList} />
+        
+        <ToggleButtons sortDateAscendingOrder={() => setEventList(sortDateAscendingOrder())}/>
+        
 
         <div id='button'>
               <button
@@ -316,8 +331,10 @@ const customStyles = {
             flexFlow: 'flow',
             flexWrap: 'wrap'
           }}>
-      {
-      eventList.map((value, index) =>
+            {
+              
+              
+          eventList.map((value, index) =>
           
         <div
         key={index}
@@ -357,7 +374,6 @@ const customStyles = {
                     
                   <IconButton
                     color="inherit"
-                      
                   >
                     <FavoriteIcon />
                   </IconButton>

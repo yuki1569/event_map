@@ -59,7 +59,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 
-
 export default function BottomMenuBar(
   props,
   modalHidden,
