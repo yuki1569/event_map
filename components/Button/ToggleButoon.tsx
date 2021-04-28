@@ -14,32 +14,54 @@ export default function ToggleButtons(props) {
   };
 
   return (
+    <div style={{marginTop:'',display:'inline-block'}}>
     <ToggleButtonGroup
       value={alignment}
       exclusive
       onChange={handleAlignment}
       aria-label="text alignment"
+      
     >
+      <div style={{backgroundColor:'white',borderRadius:'4px'}}>
       <ToggleButton
         value="left" aria-label="left aligned"
-        
         onClick={() => {
         props.sortDateAscendingOrder()
+        }}>
+        開始日順
+        {/* <FormatAlignLeftIcon /> */}
+      </ToggleButton>
+      </div>
+        
+      <div style={{ backgroundColor: 'white', borderRadius: '4px' }}>
+      <ToggleButton value="center" aria-label="centered"
+        onClick={() => {
+        props.sortDateDescendingOrder()
       }}>
-        <FormatAlignLeftIcon />
+        終了日順
+        {/* <FormatAlignCenterIcon /> */}
       </ToggleButton>
+      </div>
 
-      <ToggleButton value="center" aria-label="centered">
-        <FormatAlignCenterIcon />
+      <div style={{ backgroundColor: 'white', borderRadius: '4px' }}>
+      <ToggleButton value="right" aria-label="right aligned"
+      onClick={() => {
+        props.sortDistanceAscendingOrder()
+        }}>
+        近い順
+        {/* <FormatAlignRightIcon /> */}
       </ToggleButton>
+      </div>
 
-      <ToggleButton value="right" aria-label="right aligned">
-        <FormatAlignRightIcon />
-      </ToggleButton>
 
-      <ToggleButton value="justify" aria-label="justified" disabled>
+      {/* <ToggleButton value="justify" aria-label="centered"
+      onClick={() => {
+        props.sortDistanceDescendingOrder()
+      }}>
         <FormatAlignJustifyIcon />
-      </ToggleButton>
+      </ToggleButton> */}
     </ToggleButtonGroup>
+    </div>
+    
   );
 }

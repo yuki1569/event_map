@@ -7,6 +7,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ModalCloseButton from './Button/ModalCloseButton';
 import SearchTextField from './SearchTextField'
 import ToggleButtons from '../components/Button/ToggleButoon'
+import SwitchCom from '../components/Swith'
 
 
 export default function ModalEventList({setmodallHidden,modalHidden,
@@ -49,6 +50,7 @@ const customStyles = {
   }
 };
 
+  const initialEventList = EventList;
   const [modalIsOpenDetails, setIsOpenDetails] = useState(false);
   const [eventList, setEventList] = useState(EventList);
   const [currentPosition, setCurrentPosition] = useState({
@@ -63,20 +65,27 @@ const customStyles = {
   const [bookMark, setBookMark] = useState([]);
 
   const [searchValue, setSearchValue] = useState([])
+  const [onRecommendValue, setOnRecommendValue] = useState([])
 
-  const AlleventList= Object.assign(EventList,CreateEventList);
-  const tag = []
-  AlleventList.map(list => {
-    tag.push(list.tagList)
-  })
+  const AlleventList = Object.assign(EventList, CreateEventList);
+  
+  // const tag = []
+  // AlleventList.map(list => {
+  //   tag.push(list.tagList)
+  // })
 
-  console.log(tag);
-  console.log(AlleventList);
+  // console.log(tag);
+  // console.log(AlleventList);
 
   useEffect(() => {
     setSearchValue(searchValue)
     setEventList(searchValue)
   }, [searchValue])
+
+  useEffect(() => {
+    setOnRecommendValue(onRecommendValue)
+    setEventList(onRecommendValue)
+  }, [onRecommendValue])
 
   useEffect(() => {
     const searchBookMark = async() => {
@@ -236,15 +245,35 @@ const customStyles = {
         // onRequestClose={() => setIsOpenEventList(false)}
         style={customStyles}
       >
-        <SearchTextField setSearchValue={setSearchValue}
-          EventList={EventList} 
-          CreateEventList={CreateEventList} />
+        <div style={{ marginTop: '0', display: 'inline-block' }}>
+          
+        <SearchTextField 
+        setSearchValue={setSearchValue}
+        EventList={EventList} 
+        CreateEventList={CreateEventList}
+        />
+        </div>
+        <SwitchCom
+          setOnRecommendValue={setOnRecommendValue}
+          setEventList={setEventList}
+          EventList={EventList}
+          CreateEventList={CreateEventList}
+          initialEventList = {initialEventList}
+        />
         
-        <ToggleButtons sortDateAscendingOrder={() => setEventList(sortDateAscendingOrder())}/>
+        <ToggleButtons
+          sortDateAscendingOrder={() => setEventList(sortDateAscendingOrder())}
+          
+          sortDateDescendingOrder={() => setEventList(sortDateDescendingOrder())}
+          
+          sortDistanceAscendingOrder={() => setEventList(sortDistanceAscendingOrder())}
+          
+          sortDistanceDescendingOrder={() => setEventList(sortDistanceDescendingOrder())}
+        />
         
 
         <div id='button'>
-              <button
+              {/* <button
                 onClick={() => {
                   setEventList(sortDateAscendingOrder
                     ())
@@ -275,7 +304,7 @@ const customStyles = {
                   }}
                   >
                 現在位置からの距離降順
-              </button>
+              </button> */}
               <button
                 onClick={() => {
                   setfavoritehide(!favoritehide

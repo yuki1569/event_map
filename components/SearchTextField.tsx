@@ -73,7 +73,7 @@ export default function SearchTextField(props) {
           if (e.key === 'Enter') {
             // エンターキー押下時の処理
             setShowLists(false)
-            console.log(filteredProducts);
+            // console.log(filteredProducts);
             props.setSearchValue(filteredProducts)
           }
         }}

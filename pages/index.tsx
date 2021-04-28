@@ -249,6 +249,28 @@ export default function CreateMaps({eventList,createEventList}) {
     setZoom(zoom)
   }, [zoom])
 
+  const testtagList = []
+ 
+  function IsArrayExists(array, value) {
+  // 配列の最後までループ
+  for (var i =0, len = array.length; i < len; i++) {
+    if (value == array[i]) {
+      // 存在したらtrueを返す
+      return true;
+    }
+  }
+  // 存在しない場合falseを返す
+  return false;
+}
+  eventList.map(lists => {
+    lists.tagList.map(list => {
+      if (!IsArrayExists(testtagList, list)) {
+        testtagList.push(list)
+      }
+      })
+    })
+    console.log(testtagList)
+
 //現在位置にマップが戻るようにする関数
 async function successCallback(position){
   // 緯度・経度を取得しcenterを更新
@@ -426,6 +448,7 @@ function changeMapCenter(isState) {
 
 export async function getStaticProps() {
   const eventList = await db;
+  const tagList = [];
   // const fireStoredbEventList = await fireStoreDB.collection('eventList').get();
   // await fireStoredbEventList.docs.map((doc) => {
   //     eventList.push(doc.data())
