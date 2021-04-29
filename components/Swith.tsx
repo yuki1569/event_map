@@ -11,19 +11,7 @@ export default function SwitchCom(props) {
     setChecked((prev) => !prev);
   };
 
-  //配列のpush用関数同じ値があったらtrueを返す
-  function IsArrayExists(array, value) {
-  // 配列の最後までループ
-  for (var i =0, len = array.length; i < len; i++) {
-    if (value == array[i]) {
-      // 存在したらtrueを返す
-      return true;
-    }
-  }
-  // 存在しない場合falseを返す
-  return false;
-}
-
+ 
   useEffect(() => {
     
     if (checked) {
@@ -55,11 +43,13 @@ export default function SwitchCom(props) {
       }
       console.log(`イベント数は${lists.length}件です`)
       props.setOnRecommendValue(lists)
+      props.setEventListToMap(lists)
     } else{
       console.log(checked)
       const EventList = props.initialEventList
-      console.log(EventList)
+      // console.log(EventList)
       props.setOnRecommendValue(EventList)
+      props.setEventListToMap(EventList)
     }
   },[checked])
 

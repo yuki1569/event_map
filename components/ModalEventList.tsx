@@ -10,9 +10,13 @@ import ToggleButtons from '../components/Button/ToggleButoon'
 import SwitchCom from '../components/Swith'
 
 
-export default function ModalEventList({setmodallHidden,modalHidden,
-  // modalIsOpenEventList, setIsOpenEventList,
-  changeMapCenter,EventList,CreateEventList}) {
+export default function ModalEventList({
+  modalHidden,
+  EventList,
+  CreateEventList,
+  setmodallHidden,
+  changeMapCenter,
+  setEventListToMap }) {
   
   function toggle(bool) {
     if (bool) {
@@ -67,7 +71,7 @@ const customStyles = {
   const [searchValue, setSearchValue] = useState([])
   const [onRecommendValue, setOnRecommendValue] = useState([])
 
-  const AlleventList = Object.assign(EventList, CreateEventList);
+  // const AlleventList = Object.assign(EventList, CreateEventList);
   
   // const tag = []
   // AlleventList.map(list => {
@@ -80,7 +84,10 @@ const customStyles = {
   useEffect(() => {
     setSearchValue(searchValue)
     setEventList(searchValue)
+    // setEventListToMap(searchValue)
   }, [searchValue])
+
+
 
   useEffect(() => {
     setOnRecommendValue(onRecommendValue)
@@ -251,6 +258,7 @@ const customStyles = {
         setSearchValue={setSearchValue}
         EventList={EventList} 
         CreateEventList={CreateEventList}
+        setEventListToMap={setEventListToMap}
         />
         </div>
         <SwitchCom
@@ -258,7 +266,8 @@ const customStyles = {
           setEventList={setEventList}
           EventList={EventList}
           CreateEventList={CreateEventList}
-          initialEventList = {initialEventList}
+          initialEventList={initialEventList}
+          setEventListToMap={setEventListToMap}
         />
         
         <ToggleButtons
@@ -273,38 +282,6 @@ const customStyles = {
         
 
         <div id='button'>
-              {/* <button
-                onClick={() => {
-                  setEventList(sortDateAscendingOrder
-                    ())
-                  }}
-                  >
-                終了日付昇順
-              </button>
-              <button
-                onClick={() => {
-                  setEventList(sortDateDescendingOrder
-                    ())
-                  }}
-                  >
-                終了日付降順
-              </button>
-              <button
-                onClick={() => {
-                  setEventList(sortDistanceAscendingOrder
-                    ())
-                  }}
-                  >
-                現在位置からの距離昇順
-              </button>
-              <button
-                onClick={() => {
-                  setEventList( sortDistanceDescendingOrder
-                    ())
-                  }}
-                  >
-                現在位置からの距離降順
-              </button> */}
               <button
                 onClick={() => {
                   setfavoritehide(!favoritehide
@@ -361,8 +338,6 @@ const customStyles = {
             flexWrap: 'wrap'
           }}>
             {
-              
-              
           eventList.map((value, index) =>
           
         <div

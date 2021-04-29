@@ -75,6 +75,7 @@ export default function SearchTextField(props) {
             setShowLists(false)
             // console.log(filteredProducts);
             props.setSearchValue(filteredProducts)
+            props.setEventListToMap(filteredProducts)
           }
         }}
       />

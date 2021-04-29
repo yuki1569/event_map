@@ -14,6 +14,7 @@ import {
 import Geocode from "react-geocode";
 import ModalEventList from "../components/ModalEventList"
 import { db } from '../db/db'
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 
 
@@ -380,12 +381,15 @@ function changeMapCenter(isState) {
     }
     
        }, [eventList]);
-       
-      
   
-
+       const containerStyle = {
+  height: "100vh",
+  width: "100%",
+};
+  
   return(
     <>
+      
       <NavBar/>
       <BottomMenuBar 
         setmodallHidden={setmodallHidden}
@@ -439,56 +443,42 @@ function changeMapCenter(isState) {
         </div>
         }
 
-        <GoogleMapReact
-          bootstrapURLKeys={{ key: APIKEY }}
-          center={center}
-          // center={{ lat: center.lat, lng: center.lng }}
-          defaultZoom={14}
-          zoom={zoom}
-          onGoogleApiLoaded={handleApiLoaded}
-          options={createMapOptions}
-        >
-          {
-         eventList.map(list => {
+        {/* <Marker position={positionAkiba} />
+        <Marker position={positionIwamotocho} /> */}
+    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}>
+          <GoogleMap center={center} zoom={zoom} mapContainerStyle={containerStyle}>
+          <Marker position={center} />
+
+         {
+              props.EventList.map(list => {
+              const test = {lat:list.longitudeLatitude[0],lng:list.longitudeLatitude[1]}
               return (
-              <OriginalMarker
-                  lat={list.longitudeLatitude[0]}
-                  lng={list.longitudeLatitude[1]}
-                  
-                  // name="My Marker"
-                  color="blue"
-                  setIsOpenBottom={setIsOpenBottom}
-                  setZoom={setZoom}
-                  setCenter={setCenter}
-                  setImg={setImg}
-                  setContents={setContents}
-                  setLink={setLink}
-                  setPeriod={setPeriod}
-                  setStreetAddress={setStreetAddress}
-                  setTagList={setTagList}
-                  item={list}
-                >
-                </OriginalMarker>
+                <Marker position={test}
+                // <Marker position={lat:list.longitudeLatitude[0], list.longitudeLatitude[1] }
+                  // lat={}
+                  // lng={}
+                  // // name="My Marker"
+                  // color="blue"
+                  // onClick={() => {
+                  //   setCenter({ lat: (list.longitudeLatitude[0] - 0.011), lng: list.longitudeLatitude[1] });
+                  //   setZoom(14);
+                  //   setIsOpenBottom(true);
+                  //   setImg(list.thumbnail);
+                  //   setContents(list.contents);
+                  //   setLink(list.link);
+                  //   setPeriod(list.period);
+                  //   setStreetAddress(list.streetAdress);
+                  //   setTagList(list.tagList);
+                  // }}
+                />
               )
             })
           }
-          
-        <OriginalMarker
-          lat={currentPosition.lat+1}
-          lng={currentPosition.lng+1}
-          name="My Marker"
-          color="blue"
-        />
-        <OriginalMarker
-          lat={currentPosition.lat}
-          lng={currentPosition.lng}
-          name="My Marker"
-          color="blue"
-        />
- 
-        </GoogleMapReact>
+          </GoogleMap>
+        </LoadScript>
+
       </div>
-    </>
+      </>
   );
 }
 
