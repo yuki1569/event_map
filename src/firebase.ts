@@ -55,9 +55,9 @@ export const GithubLogin = () => {
     var credential = error.credential;
     // ...
   });
- 
-
 };
+
+
 
 // ログイン状態の検知
 export const listenAuthState = (dispatch: any) => {

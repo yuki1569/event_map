@@ -1,4 +1,4 @@
-import { Login,GithubLogin, Logout, auth,firebaseUser } from "../../src/firebase";
+import { Login,GithubLogin,fireStoreDB, Logout, auth,firebaseUser } from "../../src/firebase";
 import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -10,6 +10,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { FacebookLoginButton, GoogleLoginButton, TwitterLoginButton } from 'react-social-login-buttons';
 import BottomMenuBar from '../../components/BottomMenuBar'
 import NavBar from '../../components/NavBar'
+import SwitchCom from '../../components/SwithPageLogin'
+
 
 
 function Copyright() {
@@ -30,20 +32,19 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     width:'100%',
     position: 'fixed',
-    top:'8vh',
-    zIndex: 50,
+    zIndex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     textAlign:'center',
-    height: '86vh',
-    backgroundColor:'rgba(10,0,0,0.3)'
+    height: '100vh',
+    backgroundColor:''
   },
 
   paper: {
-    marginTop: theme.spacing(10),
-    display: 'flex',
-    zIndex:11,
-    alignItems: 'center',
+    // marginTop: theme.spacing(10),
+    // display: 'flex',
+    // zIndex:11,
+    // alignItems: 'center',
     
   },
   avatar: {
@@ -59,18 +60,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn(props) {
+  // console.log(props.userList)
   const classes = useStyles();
   const [modalHidden, setmodallHidden] = useState(true)
 
   return (
     <div className={classes.center}>
-      {/* <CssBaseline /> */}
       <NavBar/>
-      <BottomMenuBar modalHidden={modalHidden} setmodallHidden={setmodallHidden}/>
+      <BottomMenuBar modalHidden={modalHidden} setmodallHidden={setmodallHidden} />
+      
       {auth.currentUser
-        ? <div style={{backgroundColor:'white',width:'100%',position:'fixed',bottom:'7vh'}}>
+        ? <div style={{
+          width: '100%',
+          height: '100vh',
+          position: 'fixed',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          
+        }}
+        className={classes.center}
+        >
           <h2>{firebaseUser().email}でログイン中です</h2>
+            <p>プロフィールを更新</p>
+            <p>メールアドレスの登録・変更</p>
+            <p>お住まいの地域</p>
+            <p>誰と出かけるか</p>
+            
+          <SwitchCom name={'一人で'} tag={'一人で'} userList={props.userList}/>
+          <SwitchCom name={'友達と'}/>
+          <SwitchCom name={'恋人と・夫婦で'}/>
+          <SwitchCom name={'幼児以下の子供と'}/>
+          <SwitchCom name={'小学生までの子供と'}/>
+          <SwitchCom name={'中学生以上の子供と'}/>
+
           < Button
             onClick={() => Logout()}
             style={{marginBottom:'50px'}}
@@ -78,22 +102,22 @@ export default function SignIn() {
           <span style={{ fontSize: 16 }}>
               ログアウト
           </span></Button>
-          <ul>
-            <li>プロフィールを更新</li>
-            <li>メールアドレスの登録・変更</li>
-            <li>お住まいの地域</li>
-            <li>設定・規約・よくある質問</li>
-            <li></li>
-          </ul>
+          
         </div>
-        : <>
-          <div  style={{display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',marginBottom:'20px'}} className={classes.center}>
+
+        :
+        <>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+            className={classes.center}
+          >
             <div style={{
               maxWidth: '700px',
             }}>
-            {/* <div className={classes.paper}> */}
+
             <Avatar
               className={classes.avatar}
               style={{ backgroundColor: '#19857b',margin:'0 auto' }}
@@ -134,6 +158,10 @@ export default function SignIn() {
           </TwitterLoginButton>
           </a>
           
+              <p>ログインするとできること</p>
+              <p>・ブックマーク機能の利用</p>
+              <p>・スポット投稿機能の利用</p>
+              <p>・おすすめ機能の利用</p>
               {/* <ds
               </form>
               
@@ -200,4 +228,26 @@ export default function SignIn() {
           
       </div>
   );
+}
+
+export async function getStaticProps() {
+
+  // const fireStoredbEventList = await fireStoreDB.collection('eventList').get();
+  // await fireStoredbEventList.docs.map((doc) => {
+  //     eventList.push(doc.data())
+  // });
+
+  const userList = []
+  const fireStoredbCreateEvent = await fireStoreDB.collection('users').get();
+  await fireStoredbCreateEvent.docs.map((doc) => {
+        userList.push(doc.data())
+  });
+    
+    return {
+      props: {
+        userList
+        
+      },
+    }
+
 }

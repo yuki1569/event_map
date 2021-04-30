@@ -16,7 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
 import { useRouter } from 'next/router'
 
-const drawerWidth = 220;
+const drawerWidth =180;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,22 +68,22 @@ interface Props {
 const MENU_LIST = [
   {
     title: 'Home',
-    icon: <InboxIcon />,
+    // icon: <InboxIcon />,
     href: '/',
   },
   {
-    title: 'CSR',
-    icon: <InboxIcon />,
+    title: '使い方',
+    // icon: <InboxIcon />,
     href: '/csr',
   },
   {
-    title: 'SSR',
-    icon: <InboxIcon />,
+    title: '設定・規約',
+    // icon: <InboxIcon />,
     href: '/csr/a',
   },
   {
-    title: 'ISG',
-    icon: <InboxIcon />,
+    title: 'よくある質問',
+    // icon: <InboxIcon />,
     href: '/isg',
   }
 ];
@@ -104,7 +104,7 @@ export default function NavBar(props: Props) {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {MENU_LIST.map(({ title, icon, href }, index) => (
+        {MENU_LIST.map(({ title, href }, index) => (
           <div key={index}>
           <ListItem
             
@@ -116,7 +116,7 @@ export default function NavBar(props: Props) {
             }}
           >
             {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
-            <ListItemIcon>{icon}</ListItemIcon>
+            {/* <ListItemIcon>{icon}</ListItemIcon> */}
             <ListItemText primary={title} />
           </ListItem>
           </div>
