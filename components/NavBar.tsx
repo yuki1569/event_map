@@ -192,7 +192,7 @@ export default function NavBar(props: Props) {
           </IconButton>
 
           <Typography variant="h6" noWrap>
-            DEKAKEYO
+            Event Map
           </Typography>
           
         </Toolbar>

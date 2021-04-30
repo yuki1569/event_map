@@ -11,9 +11,9 @@ const Marker = (props: any) => {
         title={name}
         onClick={() => {
           props.setIsOpenBottom(true);
-          props.setZoom(14)
+          props.setZoom(15)
           props.setImg(props.item.thumbnail)
-          props.setCenter({ lat: Number(props.item.longitudeLatitude[0]), lng: Number(props.item.longitudeLatitude[1]) })
+          props.setCenter({ lat: Number(props.item.longitudeLatitude[0])-0.005, lng: Number(props.item.longitudeLatitude[1]) })
           props.setContents(props.item.contents)
           props.setLink(props.item.link)
           props.setPeriod(props.item.period)
