@@ -13,9 +13,13 @@ const Marker = (props: any) => {
           props.setIsOpenBottom(true);
           props.setZoom(14)
           props.setImg(props.item.thumbnail)
-          // props.setCenter({ lat:33.661195, lng:130.354066})
-          
           props.setCenter({ lat: Number(props.item.longitudeLatitude[0]), lng: Number(props.item.longitudeLatitude[1]) })
+          props.setContents(props.item.contents)
+          props.setLink(props.item.link)
+          props.setPeriod(props.item.period)
+          props.setStreetAddress(props.item.streetAddress)
+          props.setTagList(props.item.tagList)
+          
         }
         }
       >

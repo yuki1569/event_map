@@ -11,7 +11,7 @@ import ModalAddWindow from './ModalAddWidow'
 import Drawer from '@material-ui/core/Drawer';
 import AddForm from './AddForm'
 import DrawerCloseButton from './Button/DrawerCloseButton'
-
+import { Login, Logout, auth,firebaseUser } from "../src/firebase";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -116,10 +116,12 @@ export default function BottomMenuBar(
         
       </Drawer>
 
-      <div
-        style={{
+      {
+        auth.currentUser
+        ?<div
+          style={{
           position: 'fixed',
-          zIndex:20,
+          zIndex:10,
           right:'10px',
           bottom: '8vh',
           
@@ -131,6 +133,9 @@ export default function BottomMenuBar(
       >
       <AddButtons />
       </div>
+        :<></>
+      }
+      
       
       <AppBar position="fixed" color="primary" 
         className={classes.appBar}

@@ -37,6 +37,28 @@ export const Login = () => {
     });
 };
 
+export const GithubLogin = () => {
+  var provider = new firebase.auth.GithubAuthProvider();
+  firebase
+  .auth()
+  .signInWithPopup(provider)
+  .then(function (result: any) {
+      return result;
+    })
+  .catch((error) => {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // The email of the user's account used.
+    var email = error.email;
+    // The firebase.auth.AuthCredential type that was used.
+    var credential = error.credential;
+    // ...
+  });
+ 
+
+};
+
 // ログイン状態の検知
 export const listenAuthState = (dispatch: any) => {
   return firebase.auth().onAuthStateChanged(function (user) {

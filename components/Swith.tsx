@@ -43,13 +43,14 @@ export default function SwitchCom(props) {
       }
       console.log(`イベント数は${lists.length}件です`)
       props.setOnRecommendValue(lists)
-      props.setEventListToMap(lists)
+      props.setEventList(lists)
+      props.setEventListMarker(lists)
     } else{
       console.log(checked)
-      const EventList = props.initialEventList
       // console.log(EventList)
-      props.setOnRecommendValue(EventList)
-      props.setEventListToMap(EventList)
+      props.setOnRecommendValue(props.initialEventList)
+      props.setEventListMarker(props.initialEventList)
+      props.setEventList(props.initialEventList)
     }
   },[checked])
 

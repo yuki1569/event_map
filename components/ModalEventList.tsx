@@ -10,13 +10,7 @@ import ToggleButtons from '../components/Button/ToggleButoon'
 import SwitchCom from '../components/Swith'
 
 
-export default function ModalEventList({
-  modalHidden,
-  EventList,
-  CreateEventList,
-  setmodallHidden,
-  changeMapCenter,
-  setEventListToMap }) {
+export default function ModalEventList(props) {
   
   function toggle(bool) {
     if (bool) {
@@ -33,7 +27,7 @@ const customStyles = {
     left: 0,
     backgroundColor: "rgba(0,0,0,0.3)",
     zIndex: 10,
-    display:toggle(modalHidden)
+    display:toggle(props.modalHidden)
   },
 
   content: {
@@ -54,9 +48,9 @@ const customStyles = {
   }
 };
 
-  const initialEventList = EventList;
+  const initialEventList = props.EventList;
   const [modalIsOpenDetails, setIsOpenDetails] = useState(false);
-  const [eventList, setEventList] = useState(EventList);
+  const [modalEventList, setModalEventList] = useState(initialEventList);
   const [currentPosition, setCurrentPosition] = useState({
     lat: 34.673542,
     lng: 135.433338,
@@ -68,7 +62,7 @@ const customStyles = {
   const [listUpDate, setListUpDate] = useState(true);
   const [bookMark, setBookMark] = useState([]);
 
-  const [searchValue, setSearchValue] = useState([])
+  // const [searchValue, setSearchValue] = useState([])
   const [onRecommendValue, setOnRecommendValue] = useState([])
 
   // const AlleventList = Object.assign(EventList, CreateEventList);
@@ -81,17 +75,14 @@ const customStyles = {
   // console.log(tag);
   // console.log(AlleventList);
 
-  useEffect(() => {
-    setSearchValue(searchValue)
-    setEventList(searchValue)
-    // setEventListToMap(searchValue)
-  }, [searchValue])
-
-
+  // useEffect(() => {
+  //   setSearchValue(searchValue)
+  //   // setModalEventList(searchValue)
+  // }, [searchValue])
 
   useEffect(() => {
     setOnRecommendValue(onRecommendValue)
-    setEventList(onRecommendValue)
+    setModalEventList(onRecommendValue)
   }, [onRecommendValue])
 
   useEffect(() => {
@@ -125,7 +116,7 @@ const customStyles = {
  
    function sortDateAscendingOrder
     () {
-    eventList.sort(function (a, b) {
+    modalEventList.sort(function (a, b) {
       if (a.endDate > b.endDate) {
         return 1;
       } else {
@@ -133,14 +124,14 @@ const customStyles = {
       }
     })
     const db = []
-    eventList.map(event => {
+    modalEventList.map(event => {
       db.push(event)
     })
     return db
   }
   function sortDateDescendingOrder
     () {
-    eventList.sort(function (a, b) {
+    modalEventList.sort(function (a, b) {
       if (a.endDate < b.endDate) {
         return 1;
       } else {
@@ -148,14 +139,14 @@ const customStyles = {
       }
     })
     const db = []
-    eventList.map(event => {
+    modalEventList.map(event => {
       db.push(event)
     })
     return db
   }
   function sortDistanceAscendingOrder
     () {
-    eventList.sort(function (a, b) {
+    modalEventList.sort(function (a, b) {
       let A = distance(currentPosition.lat, currentPosition.lng, a.longitudeLatitude[0], a.longitudeLatitude[1])
       let B = distance(currentPosition.lat, currentPosition.lng, b.longitudeLatitude[0], b.longitudeLatitude[1])
       if (A > B) {
@@ -165,14 +156,14 @@ const customStyles = {
       }
     })
     const db = []
-    eventList.map(event => {
+    modalEventList.map(event => {
       db.push(event)
     })
     return db
   }
   function sortDistanceDescendingOrder
     () {
-    eventList.sort(function (a, b) {
+    modalEventList.sort(function (a, b) {
       let A = distance(currentPosition.lat, currentPosition.lng, a.longitudeLatitude[0], a.longitudeLatitude[1])
       let B = distance(currentPosition.lat, currentPosition.lng, b.longitudeLatitude[0], b.longitudeLatitude[1])
       if (A < B) {
@@ -182,7 +173,7 @@ const customStyles = {
       }
     })
     const db = []
-    eventList.map(event => {
+    modalEventList.map(event => {
       db.push(event)
     })
     return db
@@ -212,8 +203,8 @@ const customStyles = {
   getgeolocation();
 
   useEffect(() => {
-      setEventList(eventList)
-    }, [eventList])
+      setModalEventList(modalEventList)
+    }, [modalEventList])
   
 
 
@@ -233,11 +224,11 @@ const customStyles = {
           zIndex:20,
           right:'10px',
           bottom: '8vh',
-          display:toggle(modalHidden)
+          display:toggle(props.modalHidden)
           
         }}
         onClick={() => {
-          setmodallHidden(true)
+          props.setmodallHidden(true)
         }}
       >
       <ModalCloseButton />
@@ -254,30 +245,35 @@ const customStyles = {
       >
         <div style={{ marginTop: '0', display: 'inline-block' }}>
           
-        <SearchTextField 
-        setSearchValue={setSearchValue}
-        EventList={EventList} 
-        CreateEventList={CreateEventList}
-        setEventListToMap={setEventListToMap}
+        <SearchTextField
+        initialEventList={initialEventList}
+        modalEventList={modalEventList}
+        setModalEventList={setModalEventList}
+        // setSearchValue={setSearchValue}
+        EventList={props.EventList} 
+        CreateEventList={props.CreateEventList}
+        setEventListMarker={props.setEventListMarker}
+        
         />
         </div>
         <SwitchCom
+          initialEventList={props.initialEventList}
           setOnRecommendValue={setOnRecommendValue}
-          setEventList={setEventList}
-          EventList={EventList}
-          CreateEventList={CreateEventList}
-          initialEventList={initialEventList}
-          setEventListToMap={setEventListToMap}
+          setModalEventList={setModalEventList}
+          EventList={props.EventList}
+          CreateEventList={props.CreateEventList}
+          setEventListMarker={props.setEventListMarker}
+          setEventList={props.setEventList}
         />
         
         <ToggleButtons
-          sortDateAscendingOrder={() => setEventList(sortDateAscendingOrder())}
+          sortDateAscendingOrder={() => setModalEventList(sortDateAscendingOrder())}
           
-          sortDateDescendingOrder={() => setEventList(sortDateDescendingOrder())}
+          sortDateDescendingOrder={() => setModalEventList(sortDateDescendingOrder())}
           
-          sortDistanceAscendingOrder={() => setEventList(sortDistanceAscendingOrder())}
+          sortDistanceAscendingOrder={() => setModalEventList(sortDistanceAscendingOrder())}
           
-          sortDistanceDescendingOrder={() => setEventList(sortDistanceDescendingOrder())}
+          sortDistanceDescendingOrder={() => setModalEventList(sortDistanceDescendingOrder())}
         />
         
 
@@ -338,7 +334,7 @@ const customStyles = {
             flexWrap: 'wrap'
           }}>
             {
-          eventList.map((value, index) =>
+          modalEventList.map((value, index) =>
           
         <div
         key={index}
@@ -352,7 +348,7 @@ const customStyles = {
 
           <p style={{ color: 'white' }}
             onClick={() => {
-              changeMapCenter({lat: Number(value.longitudeLatitude[0]), lng:Number(value.longitudeLatitude[1])})
+              props.changeMapCenter({lat: Number(value.longitudeLatitude[0]), lng:Number(value.longitudeLatitude[1])})
             }}>
             {distance(currentPosition.lat, currentPosition.lng, value.longitudeLatitude[0], value.longitudeLatitude[1])}km先
           </p>

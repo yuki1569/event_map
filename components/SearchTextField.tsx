@@ -14,7 +14,7 @@ const ListItems: React.FC<Props> = (props) => (
 export default function SearchTextField(props) {
 
   //props.EventList = firestoreのeventList
-  const products = props.EventList
+  const products = props.initialEventList
 
   const [keyword, setKeyword] = useState("");
   const [showLists, setShowLists] = useState(false);
@@ -41,15 +41,16 @@ export default function SearchTextField(props) {
     const result = products.filter((product) => 
       
       searchKeywords.every((kw) => 
-        product.tagList.join().toLowerCase().indexOf(kw) !== -1
         // product.tagList.join().toLowerCase().indexOf(kw) !== -1
-        // product.title.toLowerCase().indexOf(kw) !== -1
+        // product.tagList.join().toLowerCase().indexOf(kw) !== -1
+        product.title.toLowerCase().indexOf(kw) !== -1
       )
    
       // searchKeywords.every((kw) => product.title.toLowerCase().indexOf(kw) !== -1)
     );
     // setFilteredProducts(result.length ? result : ["No Item Found"]);
     setFilteredProducts(result);
+    props.setModalEventList(result)
   }, [keyword]);
 
   return (
@@ -73,9 +74,9 @@ export default function SearchTextField(props) {
           if (e.key === 'Enter') {
             // エンターキー押下時の処理
             setShowLists(false)
-            // console.log(filteredProducts);
-            props.setSearchValue(filteredProducts)
-            props.setEventListToMap(filteredProducts)
+            // props.setSearchValue(filteredProducts)
+            props.setModalEventList(filteredProducts)
+            props.setEventListMarker(filteredProducts)
           }
         }}
       />

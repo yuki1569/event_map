@@ -1,5 +1,5 @@
-import { Login, Logout, auth,firebaseUser } from "../../src/firebase";
-import React from 'react';
+import { Login,GithubLogin, Logout, auth,firebaseUser } from "../../src/firebase";
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -8,6 +8,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { FacebookLoginButton, GoogleLoginButton, TwitterLoginButton } from 'react-social-login-buttons';
+import BottomMenuBar from '../../components/BottomMenuBar'
+import NavBar from '../../components/NavBar'
+
 
 function Copyright() {
   return (
@@ -58,11 +61,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
+  const [modalHidden, setmodallHidden] = useState(true)
 
   return (
     <div className={classes.center}>
       {/* <CssBaseline /> */}
-      
+      <NavBar/>
+      <BottomMenuBar modalHidden={modalHidden} setmodallHidden={setmodallHidden}/>
       {auth.currentUser
         ? <div style={{backgroundColor:'white',width:'100%',position:'fixed',bottom:'7vh'}}>
           <h2>{firebaseUser().email}でログイン中です</h2>
@@ -82,8 +87,12 @@ export default function SignIn() {
           </ul>
         </div>
         : <>
-          <div className={classes.center}>
-            <div style={{maxWidth:'700px',marginTop:'5%'}}>
+          <div  style={{display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',marginBottom:'20px'}} className={classes.center}>
+            <div style={{
+              maxWidth: '700px',
+            }}>
             {/* <div className={classes.paper}> */}
             <Avatar
               className={classes.avatar}
@@ -111,24 +120,24 @@ export default function SignIn() {
             </span>
           </Button>
 
+          <a
+            onClick={() => GithubLogin()}
+          >
           <TwitterLoginButton
             // onClick={this.twitterLogin}
             align="center" iconSize={'20'}
             style={{display:'inline-block', height: '45px', width: '90%', maxWidth:'600px',margin: '10px', }}
-          >
+            >
             <span style={{ fontSize: 16 }}>Twitterでログイン
             {/* {this.props.formText} */}
             </span>
-        </TwitterLoginButton>
+          </TwitterLoginButton>
+          </a>
           
-              <div style={{ textAlign: 'center', marginTop: 20 ,color:'white'}}>または</div>
-
-
-              <form style={{ textAlign: 'center' }} noValidate autoComplete="off">
-
+              {/* <ds
               </form>
               
-          <TextField
+          {/* <TextField
             variant="filled"
             margin="normal"
             required
@@ -140,8 +149,8 @@ export default function SignIn() {
             autoFocus
             style={{width:'90%',maxWidth:'600px',backgroundColor:'white',borderRadius:'3px'}}
             
-          />
-          <TextField
+          /> */}
+          {/* <TextField
             variant="filled"
             margin="normal"
             required
@@ -152,12 +161,12 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
             style={{width:'90%',maxWidth:'600px',backgroundColor:'white',borderRadius:'3px'}}
-          />
+          /> */}
           {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           /> */}
-          <Button
+          {/* <Button
             type="submit"
             fullWidth
             variant="contained"
@@ -166,7 +175,7 @@ export default function SignIn() {
             style={{width:'90%',maxWidth:'600px',borderRadius:'3px'}}
           >
             Sign In
-          </Button>
+          </Button> */}
           {/* <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">

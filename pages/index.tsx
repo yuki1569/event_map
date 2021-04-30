@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import GoogleMapReact, { MapOptions, Maps }  from "google-map-react";
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
-import OriginalMarker from "../components/map/marker";
+import Marker from "../components/map/marker";
+import PersonMarker from "../components/map/personMarker";
 import ModalBottom from "../components/ModalBottom";
 import MyLocationButton from '../components/Button/MyLocationButton';
 import BottomMenuBar from '../components/BottomMenuBar';
@@ -226,9 +227,8 @@ export default function CreateMaps( props ) {
       ],
     }
   }
-
-  const initialEventList = props.EventList
   const [eventList, setEventList] = useState(props.EventList)
+  const [eventListMarker, setEventListMarker] = useState(props.EventList)
   const [center, setCenter] = useState({ lat: 34.665442, lng: 135.432338 });
   const [zoom, setZoom] = useState(13);
   const [currentPosition, setCurrentPosition] = useState({
@@ -245,9 +245,6 @@ export default function CreateMaps( props ) {
   const [tagList, setTagList] = useState("");
   const [modalHidden, setmodallHidden] = useState(true)
 
-  useEffect(() => {
-    console.log(eventList)
-  }, [eventList])
 
   useEffect(() => {
   setCenter(center)
@@ -392,12 +389,16 @@ function changeMapCenter(isState) {
         modalHidden={modalHidden}
       />
       <ModalEventList
+        initialEventList={props.EventList}
         modalHidden={modalHidden}
-        EventList={initialEventList}
+        EventList={eventList}
+        setEventListMarker={setEventListMarker}
         CreateEventList={props.createEventList}
         setmodallHidden={setmodallHidden}
         changeMapCenter={changeMapCenter}
-        setEventListToMap={setEventList}
+
+        setEventList={setEventList}
+        // setEventListToMap={setEventList}
        />
         <ModalBottom
         modalIsOpenBottom={modalIsOpenBottom}
@@ -448,10 +449,17 @@ function changeMapCenter(isState) {
           onGoogleApiLoaded={handleApiLoaded}
           options={createMapOptions}
         >
+          <PersonMarker
+          lat={currentPosition.lat+0.00005}
+          lng={currentPosition.lng}
+          name="My Marker"
+          color="red"
+        />
+
           {
-         eventList.map(list => {
+         eventListMarker.map(list => {
               return (
-              <OriginalMarker
+              <Marker
                   lat={list.longitudeLatitude[0]}
                   lng={list.longitudeLatitude[1]}
                   
@@ -468,23 +476,13 @@ function changeMapCenter(isState) {
                   setTagList={setTagList}
                   item={list}
                 >
-                </OriginalMarker>
+                </Marker>
               )
             })
           }
           
-        <OriginalMarker
-          lat={currentPosition.lat+1}
-          lng={currentPosition.lng+1}
-          name="My Marker"
-          color="blue"
-        />
-        <OriginalMarker
-          lat={currentPosition.lat}
-          lng={currentPosition.lng}
-          name="My Marker"
-          color="blue"
-        />
+        
+    
  
         </GoogleMapReact>
       </div>
