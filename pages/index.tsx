@@ -499,7 +499,7 @@ export async function getStaticProps() {
   // await fireStoredbEventList.docs.map((doc) => {
   //     eventList.push(doc.data())
   // });
-
+  
 
   const createEventList = []
   const fireStoredbCreateEvent = await fireStoreDB.collection('createEvent').get();

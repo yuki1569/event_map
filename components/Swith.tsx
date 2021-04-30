@@ -6,7 +6,7 @@ import { useState, useEffect, ReactElement, } from "react";
 import {  auth, fireStoreDB, firebaseUser } from '../src/firebase';
 
 export default function SwitchCom(props) {
-  console.log(props.userTagList)
+  // console.log(props.userTagList)
   const [checked, setChecked] = useState(false);
   const userTagList = props.userTagList
 
@@ -14,9 +14,11 @@ export default function SwitchCom(props) {
     setChecked((prev) => !prev);
   };
   
-  
+
   const tagList = []
-  userTagList.map(tag => {
+
+  auth.currentUser
+  ?userTagList.map(tag => {
       
       if (tag.uid === firebaseUser().uid) {
         tagList.push(tag.tag)
@@ -25,7 +27,7 @@ export default function SwitchCom(props) {
       }
 
   })
-  console.log(tagList)
+  :console.log(tagList)
 
  
   useEffect(() => {

@@ -10,7 +10,7 @@ import {  auth, fireStoreDB, firebaseUser } from '../src/firebase';
 export default function SwitchCom(props) {
   let lists = props.userList
 
-  console.log(lists.filter(list => list.tag === props.tag))
+  // console.log(lists.filter(list => list.tag === props.tag))
 
   function test() {
     // if (lists.filter(list => list.tag === props.tag).length != 0) {
@@ -32,7 +32,7 @@ export default function SwitchCom(props) {
 
   
 
-  console.log(lists.filter(list => list.tag === props.tag))
+  // console.log(lists.filter(list => list.tag === props.tag))
 
   if (lists.filter(list => list.tag === props.tag) > 0) {
     setChecked(true)
