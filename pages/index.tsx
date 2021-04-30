@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import GoogleMapReact, { MapOptions, Maps }  from "google-map-react";
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Marker from "../components/map/marker";
-import PersonMarker from "../components/map/personMarker";
+import PersonMarker from "../components/map/PersonMarker";
 import ModalBottom from "../components/ModalBottom";
 import MyLocationButton from '../components/Button/MyLocationButton';
 import BottomMenuBar from '../components/BottomMenuBar';
