@@ -492,7 +492,7 @@ function changeMapCenter(isState) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const EventList = await db;
   const tagList = [];
   // const fireStoredbEventList = await fireStoreDB.collection('eventList').get();
@@ -521,3 +521,5 @@ export async function getStaticProps() {
     },
   }
 }
+
+
