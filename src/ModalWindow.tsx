@@ -1,5 +1,5 @@
 import Modal from 'react-modal'
-import DetailsModal from './Modaldetails'
+import DetailsModal from '../components/ModalEventListDetails'
 import { useState } from "react";
 
 
