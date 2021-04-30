@@ -88,12 +88,12 @@ export default function SignIn(props) {
             <p>お住まいの地域</p>
             <p>誰と出かけるか</p>
             
-          <SwitchCom name={'一人で'} tag={'一人で'} userList={props.userList}/>
-          <SwitchCom name={'友達と'}/>
-          <SwitchCom name={'恋人と・夫婦で'}/>
-          <SwitchCom name={'幼児以下の子供と'}/>
-          <SwitchCom name={'小学生までの子供と'}/>
-          <SwitchCom name={'中学生以上の子供と'}/>
+          <SwitchCom name={'一人で'} tag={['個人で','美術展・博物展','見本市・展示会','伝統・歴史体験']} userList={props.userList}/>
+          <SwitchCom name={'友達と'} tag={['友達と','友人と','花・自然','体験イベント・アクティビティ','美術展・博物展','味覚狩り','見本市・展示会','伝統・歴史体験','イルミネーション','ライトアップ','グルメ・フードフェス']} userList={props.userList}/>
+          <SwitchCom name={'恋人と・夫婦で'} tag={['花・自然','恋人と・夫婦で','恋人・夫婦で','友達と','友人と','体験イベント・アクティビティ','友達と','友人と','体験イベント・アクティビティ','味覚狩り','見本市・展示会','伝統・歴史体験','イルミネーション','ライトアップ','グルメ・フードフェス']} userList={props.userList}/>
+          <SwitchCom name={'幼児以下の子供と'} tag={['幼児と','幼児と']} userList={props.userList}/>
+          <SwitchCom name={'小学生までの子供と'} tag={['花・自然','子供と','幼児と','小学生と','体験イベント・アクティビティ','味覚狩り','イルミネーション','ライトアップ','グルメ・フードフェス']} userList={props.userList}/>
+          <SwitchCom name={'中学生以上の子供と'} tag={['中・高校生と','友達と','友人と','体験イベント・アクティビティ','味覚狩り','見本市・展示会','伝統・歴史体験','イルミネーション','ライトアップ','グルメ・フードフェス']} userList={props.userList}/>
 
           < Button
             onClick={() => Logout()}
@@ -230,7 +230,7 @@ export default function SignIn(props) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
 
   // const fireStoredbEventList = await fireStoreDB.collection('eventList').get();
   // await fireStoredbEventList.docs.map((doc) => {

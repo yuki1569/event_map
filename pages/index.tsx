@@ -40,6 +40,7 @@ export default function CreateMaps( props ) {
   
 
   const createMapOptions = (maps: Maps): MapOptions => {
+    // console.log(props.userTagList)
     return {
       mapTypeControlOptions: {
         position: maps.ControlPosition.TOP_RIGHT,
@@ -325,58 +326,58 @@ function changeMapCenter(isState) {
   getgeolocation();
 
 //マップが読み込まれるときにマーカーなどを配置する関数
-  const handleApiLoaded =
-    useEffect(() => {
-    ({ map, maps }) => {
+  // const handleApiLoaded =
+  //   useEffect(() => {
+  //   ({ map, maps }) => {
       
-      eventList.map((db) => {
-      let lat = Number(db.longitudeLatitude[0])
-      let lng = Number(db.longitudeLatitude[1])
-      new maps.Marker({
-        position: { lat: lat, lng: lng },
-        map,
-      }).addListener("click", () => {
-        map.setCenter({ lat: (lat - 0.011), lng: lng });
-        map.setZoom(14);
-        setIsOpenBottom(true);
-        setImg(db.thumbnail);
-        setContents(db.contents);
-        setLink(db.link);
-        setPeriod(db.period);
-        setStreetAddress(db.streetAdress);
-        setTagList(db.tagList);
-      });
-    })
+  //     eventList.map((db) => {
+  //     let lat = Number(db.longitudeLatitude[0])
+  //     let lng = Number(db.longitudeLatitude[1])
+  //     new maps.Marker({
+  //       position: { lat: lat, lng: lng },
+  //       map,
+  //     }).addListener("click", () => {
+  //       map.setCenter({ lat: (lat - 0.011), lng: lng });
+  //       map.setZoom(14);
+  //       setIsOpenBottom(true);
+  //       setImg(db.thumbnail);
+  //       setContents(db.contents);
+  //       setLink(db.link);
+  //       setPeriod(db.period);
+  //       setStreetAddress(db.streetAdress);
+  //       setTagList(db.tagList);
+  //     });
+  //   })
 
-      props.createEventList.map((db) => {
-        // Geocode.fromAddress(db.streetAddress).then(
-          // (response) => {
-            // const { lat, lng }:{lat:number,lng:number} = response.results[0].geometry.location;
-        const lat =db.longitudeLatitude.lat
-        const lng =db.longitudeLatitude.lng
-        new maps.Marker({
-          position: { lat:lat , lng:lng },
-          map,
-        }).addListener("click", () => {
-          map.setCenter({ lat: (lat - 0.011), lng: lng });
-          map.setZoom(14);
-          setIsOpenBottom(true);
-          setImg(db.thumbnail);
-          setContents(db.contents);
-          setLink(db.link);
-          setPeriod(db.period);
-          setStreetAddress(db.streetAdress);
-          setTagList(db.tagList);
-        })
-      // },
-        //   (error) => {
-        //     console.error(error);
-        //   }
-        // );
-      })
-    }
+  //     props.createEventList.map((db) => {
+  //       // Geocode.fromAddress(db.streetAddress).then(
+  //         // (response) => {
+  //           // const { lat, lng }:{lat:number,lng:number} = response.results[0].geometry.location;
+  //       const lat =db.longitudeLatitude.lat
+  //       const lng =db.longitudeLatitude.lng
+  //       new maps.Marker({
+  //         position: { lat:lat , lng:lng },
+  //         map,
+  //       }).addListener("click", () => {
+  //         map.setCenter({ lat: (lat - 0.011), lng: lng });
+  //         map.setZoom(14);
+  //         setIsOpenBottom(true);
+  //         setImg(db.thumbnail);
+  //         setContents(db.contents);
+  //         setLink(db.link);
+  //         setPeriod(db.period);
+  //         setStreetAddress(db.streetAdress);
+  //         setTagList(db.tagList);
+  //       })
+  //     // },
+  //       //   (error) => {
+  //       //     console.error(error);
+  //       //   }
+  //       // );
+  //     })
+  //   }
     
-       }, [eventList]);
+  //      }, [eventList]);
        
       
   
@@ -391,6 +392,7 @@ function changeMapCenter(isState) {
       <ModalEventList
         initialEventList={props.EventList}
         modalHidden={modalHidden}
+        userTagList={props.userTagList}
         EventList={eventList}
         setEventListMarker={setEventListMarker}
         CreateEventList={props.createEventList}
@@ -446,7 +448,7 @@ function changeMapCenter(isState) {
           // center={{ lat: center.lat, lng: center.lng }}
           defaultZoom={14}
           zoom={zoom}
-          onGoogleApiLoaded={handleApiLoaded}
+          // onGoogleApiLoaded={handleApiLoaded}
           options={createMapOptions}
         >
           <PersonMarker
@@ -504,11 +506,18 @@ export async function getStaticProps() {
   await fireStoredbCreateEvent.docs.map((doc) => {
         createEventList.push(doc.data())
   });
+
+  const userTagList = []
+  const fireStoredbUserTagList = await fireStoreDB.collection('users').get();
+  await fireStoredbUserTagList.docs.map((doc) => {
+        userTagList.push(doc.data())
+  });
   
   return {
     props: {
       EventList,
-      createEventList
+      createEventList,
+      userTagList
     },
   }
 }

@@ -19,7 +19,6 @@ const Marker = (props: any) => {
           props.setPeriod(props.item.period)
           props.setStreetAddress(props.item.streetAddress)
           props.setTagList(props.item.tagList)
-          
         }
         }
       >

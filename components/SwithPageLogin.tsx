@@ -6,18 +6,40 @@ import { useState,useEffect,ReactElement, } from "react";
 import {  auth, fireStoreDB, firebaseUser } from '../src/firebase';
 
 
+
 export default function SwitchCom(props) {
-  const [checked, setChecked] = useState(false);
+  let lists = props.userList
+
+  console.log(lists.filter(list => list.tag === props.tag))
+
+  function test() {
+    // if (lists.filter(list => list.tag === props.tag).length != 0) {
+
+      if ((lists.filter(list => list.uidname === firebaseUser().uid+props.name).length != 0)) {
+        console.log('storeにあります')
+        return true
+        
+      }
+     else {
+      console.log('storeにありません')
+      return  false
+  }
+  }
+  let bool = test()
+
+
+  const [checked, setChecked] = useState(bool);
+
   
 
-const lists =  props.userList.map((list) => {
-    let userTaglist = [];
-    if (list.uid === firebaseUser().uid) {
-      userTaglist.push(list)
+  console.log(lists.filter(list => list.tag === props.tag))
+
+  if (lists.filter(list => list.tag === props.tag) > 0) {
+    setChecked(true)
   }
-  return userTaglist
-  })
+
   
+  lists.filter
   console.log(lists)
 
   const toggleChecked = () => {
@@ -26,17 +48,16 @@ const lists =  props.userList.map((list) => {
 
  
   useEffect(() => {
-    
     if (checked) {
       console.log(checked)
-      fireStoreDB.collection('users').doc(firebaseUser().uid).set({
-        uid: firebaseUser().uid,
-        tag: [props.tag,]
-        
+      fireStoreDB.collection('users').doc(firebaseUser().uid + props.tag).set({
+        tag : props.tag,
+        uid :firebaseUser().uid,
+        uidname :firebaseUser().uid+props.name
       })
     } else{
       console.log(checked)
-      
+      fireStoreDB.collection('users').doc(firebaseUser().uid + props.tag).delete()
     }
   },[checked])
 

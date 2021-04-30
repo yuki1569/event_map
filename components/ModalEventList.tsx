@@ -11,7 +11,6 @@ import SwitchCom from '../components/Swith'
 
 
 export default function ModalEventList(props) {
-  
   function toggle(bool) {
     if (bool) {
       return 'none'
@@ -258,11 +257,13 @@ const customStyles = {
         </div>
         <SwitchCom
           initialEventList={props.initialEventList}
+          userTagList={props.userTagList}
           setOnRecommendValue={setOnRecommendValue}
           setModalEventList={setModalEventList}
           EventList={props.EventList}
           CreateEventList={props.CreateEventList}
           setEventListMarker={props.setEventListMarker}
+
           setEventList={props.setEventList}
         />
         
