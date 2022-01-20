@@ -1,4 +1,5 @@
 import Modal from 'react-modal'
+import ModalCloseButton from './Button/ModalCloseButton';
 
 
 const customStyles = {
@@ -7,7 +8,7 @@ const customStyles = {
     left: 0,
     // backgroundColor: "rgba(0,0,0,0.3)",
     scrollBars: 'red',
-    zIndex: 11,
+    zIndex:40,
     
     // overflowY: "scroll",
   },
@@ -54,10 +55,21 @@ export default function DetailsModal({ modalIsOpenDetails, setIsOpenDetails, img
           // スタイリングを定義
           style={customStyles}
         >
+            <div
+        style={{
+          position: 'fixed',
+          zIndex:20,
+          right:'10px',
+          bottom: '8vh',
+        }}
+        onClick={() => setIsOpenDetails(false)}
+      >
+      <ModalCloseButton />
+      </div>
               <div style={{ margin: '10px', width: '30vh' }}>
               <img src={img} style={{ width:'100%'}}/>
-              <li style={{color:'white'}}>{contents}</li>
-              </div>
+            <li style={{ color: 'white' }}>{contents}</li>
+          </div>
           
         </Modal>
         <style jsx>{`

@@ -1,16 +1,16 @@
-
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import { ThemeProvider } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import theme from '../components/theme';
-import NavBar from '../components/NavBar';
-import BottomMenuBar from '../components/BottomMenuBar';
 import React, { useReducer, useEffect } from "react";
 import { AppProps } from "next/app";
 import AuthContext from "../src/AuthContext";
 import authReducer from "../src/authReducer";
 import { listenAuthState } from "../src/firebase";
+
+import CssBaseline from '@material-ui/core/CssBaseline';
+// カスタムしたテーマ(スタイル)を定義
+import { ThemeProvider } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import theme from '../components/theme';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [state, dispatch] = useReducer(
@@ -33,12 +33,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <React.Fragment>
 
-      <Head>
+      {/* <Head>
         <title>Create Next App</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-      </Head>
+      </Head> */}
 
-      <ThemeProvider theme={theme}>
+      <MuiThemeProvider theme={theme}>
       {/* <ThemeProvider > */}
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <AuthContext.Provider value={state}>
@@ -47,7 +47,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
         </AuthContext.Provider>
         <CssBaseline />
-      </ThemeProvider>
+      </MuiThemeProvider>
 
     </React.Fragment>
   );

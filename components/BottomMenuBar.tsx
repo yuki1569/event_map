@@ -11,7 +11,8 @@ import ModalAddWindow from './ModalAddWidow'
 import Drawer from '@material-ui/core/Drawer';
 import AddForm from './AddForm'
 import DrawerCloseButton from './Button/DrawerCloseButton'
-import { Login, Logout, auth,firebaseUser } from "../src/firebase";
+import { Login, Logout, auth, firebaseUser } from "../src/firebase";
+import { withStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,13 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: 'flex',
     },
-    // drawer: {
-    //   [theme.breakpoints.up('sm')]: {
-    //     width:500,
-    //     flexShrink: 0,
-        
-    //   },
-    // },
     toolBar: {
       height: '9vh'
     },
@@ -62,7 +56,6 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function BottomMenuBar(
   props,
   modalHidden,
-
 ) {
   const classes = useStyles();
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -136,7 +129,6 @@ export default function BottomMenuBar(
         :<></>
       }
       
-      
       <AppBar position="fixed" color="primary" 
         className={classes.appBar}
       >
@@ -204,3 +196,4 @@ export default function BottomMenuBar(
     </React.Fragment>
   );
 }
+

@@ -1,33 +1,33 @@
-import { List } from '@material-ui/core';
-import React from 'react';
-import PersonPinIcon from '@material-ui/icons/PersonPin';
+import { List } from "@material-ui/core";
+import React from "react";
+import PersonPinIcon from "@material-ui/icons/PersonPin";
+import AdjustIcon from "@material-ui/icons/Adjust";
 
 const PersonMarker = (props: any) => {
   const { color, name, id } = props;
   // console.log(props.item)
   return (
+    <>
       <>
+        <div className="marker" id={id}></div>
 
-        <PersonPinIcon/>
-
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
-
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
+        <style jsx>{`
+          .marker {
+            background-color: black;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #fff;
+            border-radius: 100%;
+            user-select: none;
+            transform: translate(-50%, -50%);
+          }
+        `}</style>
       </>
+    </>
   );
-  
 };
-  
-  export default PersonMarker;
+
+export default PersonMarker;

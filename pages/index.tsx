@@ -1,44 +1,22 @@
 import React, { useState, useEffect } from "react";
-import GoogleMapReact, { MapOptions, Maps }  from "google-map-react";
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
-import Marker from "../components/map/marker";
+import GoogleMapReact, { MapOptions, Maps } from "google-map-react";
+import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
+import CustumMarker from "../components/map/marker";
 import PersonMarker from "../components/map/PersonMarker";
 import ModalBottom from "../components/ModalBottom";
-import MyLocationButton from '../components/Button/MyLocationButton';
-import BottomMenuBar from '../components/BottomMenuBar';
-import NavBar from '../components/NavBar'
-import {
-  auth,
-  fireStoreDB,
-  firebaseUser,
-} from "../src/firebase";
+import MyLocationButton from "../components/Button/MyLocationButton";
+import BottomMenuBar from "../components/BottomMenuBar";
+import NavBar from "../components/NavBar";
+import { auth, fireStoreDB, firebaseUser } from "../src/firebase";
 import Geocode from "react-geocode";
-import ModalEventList from "../components/ModalEventList"
-import { db } from '../db/db'
+import ModalEventList from "../components/ModalEventList";
 
-
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    appBar: {
-      // height: '7vh',
-      top: 'auto',
-      bottom: 0,
-    },
-    icon: {
-      color:'white'
-      // textAlign: 'center'
-    },
-
-  }),
-);
+import { db } from "../db/db";
 
 const APIKEY = "";
 Geocode.setApiKey(`${process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}`);
 
-export default function CreateMaps( props ) {
-  
-
+export default function CreateMaps(props) {
   const createMapOptions = (maps: Maps): MapOptions => {
     // console.log(props.userTagList)
     return {
@@ -50,13 +28,14 @@ export default function CreateMaps( props ) {
       scaleControl: false,
       streetViewControl: false,
       fullscreenControl: false,
+      showingInfoWindow: false,
       styles: [
         {
-          featureType: 'water',
-          elementType: 'geometry',
+          featureType: "water",
+          elementType: "geometry",
           stylers: [
             {
-              color: '#e9e9e9',
+              color: "#e9e9e9",
             },
             {
               lightness: 17,
@@ -64,11 +43,11 @@ export default function CreateMaps( props ) {
           ],
         },
         {
-          featureType: 'landscape',
-          elementType: 'geometry',
+          featureType: "landscape",
+          elementType: "geometry",
           stylers: [
             {
-              color: '#f5f5f5',
+              color: "#f5f5f5",
             },
             {
               lightness: 20,
@@ -76,11 +55,11 @@ export default function CreateMaps( props ) {
           ],
         },
         {
-          featureType: 'road.highway',
-          elementType: 'geometry.fill',
+          featureType: "road.highway",
+          elementType: "geometry.fill",
           stylers: [
             {
-              color: '#ffffff',
+              color: "#ffffff",
             },
             {
               lightness: 17,
@@ -88,11 +67,11 @@ export default function CreateMaps( props ) {
           ],
         },
         {
-          featureType: 'road.highway',
-          elementType: 'geometry.stroke',
+          featureType: "road.highway",
+          elementType: "geometry.stroke",
           stylers: [
             {
-              color: '#ffffff',
+              color: "#ffffff",
             },
             {
               lightness: 29,
@@ -103,11 +82,11 @@ export default function CreateMaps( props ) {
           ],
         },
         {
-          featureType: 'road.arterial',
-          elementType: 'geometry',
+          featureType: "road.arterial",
+          elementType: "geometry",
           stylers: [
             {
-              color: '#ffffff',
+              color: "#ffffff",
             },
             {
               lightness: 18,
@@ -115,11 +94,11 @@ export default function CreateMaps( props ) {
           ],
         },
         {
-          featureType: 'road.local',
-          elementType: 'geometry',
+          featureType: "road.local",
+          elementType: "geometry",
           stylers: [
             {
-              color: '#ffffff',
+              color: "#ffffff",
             },
             {
               lightness: 16,
@@ -127,11 +106,11 @@ export default function CreateMaps( props ) {
           ],
         },
         {
-          featureType: 'poi',
-          elementType: 'geometry',
+          featureType: "poi",
+          elementType: "geometry",
           stylers: [
             {
-              color: '#f5f5f5',
+              color: "#f5f5f5",
             },
             {
               lightness: 21,
@@ -139,11 +118,11 @@ export default function CreateMaps( props ) {
           ],
         },
         {
-          featureType: 'poi.park',
-          elementType: 'geometry',
+          featureType: "poi.park",
+          elementType: "geometry",
           stylers: [
             {
-              color: '#dedede',
+              color: "#dedede",
             },
             {
               lightness: 21,
@@ -151,13 +130,13 @@ export default function CreateMaps( props ) {
           ],
         },
         {
-          elementType: 'labels.text.stroke',
+          elementType: "labels.text.stroke",
           stylers: [
             {
-              visibility: 'on',
+              visibility: "on",
             },
             {
-              color: '#ffffff',
+              color: "#ffffff",
             },
             {
               lightness: 16,
@@ -165,13 +144,13 @@ export default function CreateMaps( props ) {
           ],
         },
         {
-          elementType: 'labels.text.fill',
+          elementType: "labels.text.fill",
           stylers: [
             {
               saturation: 36,
             },
             {
-              color: '#333333',
+              color: "#333333",
             },
             {
               lightness: 40,
@@ -179,19 +158,19 @@ export default function CreateMaps( props ) {
           ],
         },
         {
-          elementType: 'labels.icon',
+          elementType: "labels.icon",
           stylers: [
             {
-              visibility: 'off',
+              visibility: "off",
             },
           ],
         },
         {
-          featureType: 'transit',
-          elementType: 'geometry',
+          featureType: "transit",
+          elementType: "geometry",
           stylers: [
             {
-              color: '#f2f2f2',
+              color: "#f2f2f2",
             },
             {
               lightness: 19,
@@ -199,11 +178,11 @@ export default function CreateMaps( props ) {
           ],
         },
         {
-          featureType: 'administrative',
-          elementType: 'geometry.fill',
+          featureType: "administrative",
+          elementType: "geometry.fill",
           stylers: [
             {
-              color: '#fefefe',
+              color: "#fefefe",
             },
             {
               lightness: 20,
@@ -211,11 +190,11 @@ export default function CreateMaps( props ) {
           ],
         },
         {
-          featureType: 'administrative',
-          elementType: 'geometry.stroke',
+          featureType: "administrative",
+          elementType: "geometry.stroke",
           stylers: [
             {
-              color: '#fefefe',
+              color: "#fefefe",
             },
             {
               lightness: 17,
@@ -226,10 +205,10 @@ export default function CreateMaps( props ) {
           ],
         },
       ],
-    }
-  }
-  const [eventList, setEventList] = useState(props.EventList)
-  const [eventListMarker, setEventListMarker] = useState(props.EventList)
+    };
+  };
+  const [eventList, setEventList] = useState(props.EventList);
+  const [eventListMarker, setEventListMarker] = useState(props.EventList);
   const [center, setCenter] = useState({ lat: 34.665442, lng: 135.432338 });
   const [zoom, setZoom] = useState(13);
   const [currentPosition, setCurrentPosition] = useState({
@@ -244,59 +223,42 @@ export default function CreateMaps( props ) {
   const [period, setPeriod] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
   const [tagList, setTagList] = useState("");
-  const [modalHidden, setmodallHidden] = useState(true)
+  const [modalHidden, setmodallHidden] = useState(true);
+  const [selectedButtonId, setselectedButtonId] = useState(null);
 
+  function handleButtonClick(buttonId) {
+    setselectedButtonId(buttonId);
+  }
 
   useEffect(() => {
-  setCenter(center)
-  }, [center])
+    setCenter(center);
+  }, [center]);
 
   useEffect(() => {
-    setZoom(zoom)
-  }, [zoom])
+    setZoom(zoom);
+  }, [zoom]);
 
-//   const testtagList = []
-//   function IsArrayExists(array, value) {
-//   // 配列の最後までループ
-//   for (var i =0, len = array.length; i < len; i++) {
-//     if (value == array[i]) {
-//       // 存在したらtrueを返す
-//       return true;
-//     }
-//   }
-//   // 存在しない場合falseを返す
-//   return false;
-// }
-//   eventList.map(lists => {
-//     lists.tagList.map(list => {
-//       if (!IsArrayExists(testtagList, list)) {
-//         testtagList.push(list)
-//       }
-//       })
-//     })
-    // console.log(testtagList)
+  //現在位置にマップが戻るようにする関数
+  async function successCallback(position) {
+    // 緯度・経度を取得しcenterを更新
+    let latitude: number = await position.coords.latitude;
+    let longitude: number = await position.coords.longitude;
+    await setCenter({ lat: latitude + 0.00001, lng: longitude + 0.00001 });
+    await setCenter({ lat: latitude, lng: longitude });
+  }
 
-//現在位置にマップが戻るようにする関数
-async function successCallback(position){
-  // 緯度・経度を取得しcenterを更新
-  let latitude:number = await position.coords.latitude;
-  let longitude: number = await position.coords.longitude;
-  await setCenter({ lat: latitude+0.00001, lng: longitude+0.00001 })
-  await setCenter({ lat: latitude, lng: longitude })
-  };
+  //マップのズーム倍率がディフォルト14に戻るようにする関数
+  async function initizalZoomValue() {
+    await setZoom(13);
+    await setZoom(14);
+  }
 
-//マップのズーム倍率がディフォルト14に戻るようにする関数
-async function initizalZoomValue(){
-  await setZoom(13)
-  await setZoom(14)
-};
+  //イベントリストで要素をクリックしたときに位置が変わる
+  function changeMapCenter(isState) {
+    setCenter(isState);
+  }
 
-//イベントリストで要素をクリックしたときに位置が変わる
-function changeMapCenter(isState) {
-  setCenter(isState)
-}
-
-//ページ表示時に現在位置を取得してマップ上に表示する関数
+  //ページ表示時に現在位置を取得してマップ上に表示する関数
   function getgeolocation() {
     const success = (data) => {
       const currentPosition = {
@@ -325,11 +287,11 @@ function changeMapCenter(isState) {
   }
   getgeolocation();
 
-//マップが読み込まれるときにマーカーなどを配置する関数
+  //マップが読み込まれるときにマーカーなどを配置する関数
   // const handleApiLoaded =
   //   useEffect(() => {
   //   ({ map, maps }) => {
-      
+
   //     eventList.map((db) => {
   //     let lat = Number(db.longitudeLatitude[0])
   //     let lng = Number(db.longitudeLatitude[1])
@@ -376,16 +338,14 @@ function changeMapCenter(isState) {
   //       // );
   //     })
   //   }
-    
-  //      }, [eventList]);
-       
-      
-  
 
-  return(
+  //      }, [eventList]);
+
+  return (
     <>
-      <NavBar/>
-      <BottomMenuBar 
+      <NavBar />
+      {/* <ResponsiveAppBar /> */}
+      <BottomMenuBar
         setmodallHidden={setmodallHidden}
         modalHidden={modalHidden}
       />
@@ -398,11 +358,10 @@ function changeMapCenter(isState) {
         CreateEventList={props.createEventList}
         setmodallHidden={setmodallHidden}
         changeMapCenter={changeMapCenter}
-
         setEventList={setEventList}
-        // setEventListToMap={setEventList}
-       />
-        <ModalBottom
+        setselectedButtonId={setselectedButtonId}
+      />
+      <ModalBottom
         modalIsOpenBottom={modalIsOpenBottom}
         setIsOpenBottom={setIsOpenBottom}
         img={img}
@@ -411,8 +370,9 @@ function changeMapCenter(isState) {
         period={period}
         streetAdress={streetAddress}
         tagList={tagList}
-       />
-          
+        changeMarker={handleButtonClick}
+      />
+
       <div
         style={{
           height: "84vh",
@@ -422,25 +382,25 @@ function changeMapCenter(isState) {
           zIndex: 1,
         }}
       >
-        {
-        center === { lat: 0, lng: 0 }
-        ? <div>n</div>
-        : 
-        <div
-        style={{
-          position: 'fixed',
-          zIndex:20,
-          right:'10px',
-          bottom: '18vh',
-        }}
-        onClick={() => {
-          navigator.geolocation.getCurrentPosition(successCallback)
-           initizalZoomValue()
-        }}
-        >
-        <MyLocationButton />
-        </div>
-        }
+        {/* 現在位置へ戻すボタン */}
+        {center === { lat: 0, lng: 0 } ? (
+          <div>n</div>
+        ) : (
+          <div
+            style={{
+              position: "fixed",
+              zIndex: 20,
+              right: "10px",
+              bottom: "18vh",
+            }}
+            onClick={() => {
+              navigator.geolocation.getCurrentPosition(successCallback);
+              initizalZoomValue();
+            }}
+          >
+            <MyLocationButton />
+          </div>
+        )}
 
         <GoogleMapReact
           bootstrapURLKeys={{ key: APIKEY }}
@@ -452,40 +412,34 @@ function changeMapCenter(isState) {
           options={createMapOptions}
         >
           <PersonMarker
-          lat={currentPosition.lat+0.00005}
-          lng={currentPosition.lng}
-          name="My Marker"
-          color="red"
-        />
+            lat={currentPosition.lat}
+            lng={currentPosition.lng}
+            name="My CustumMarker"
+            color="red"
+          />
 
-          {
-         eventListMarker.map(list => {
-              return (
-              <Marker
-                  lat={list.longitudeLatitude[0]}
-                  lng={list.longitudeLatitude[1]}
-                  
-                  // name="My Marker"
-                  color="blue"
-                  setIsOpenBottom={setIsOpenBottom}
-                  setZoom={setZoom}
-                  setCenter={setCenter}
-                  setImg={setImg}
-                  setContents={setContents}
-                  setLink={setLink}
-                  setPeriod={setPeriod}
-                  setStreetAddress={setStreetAddress}
-                  setTagList={setTagList}
-                  item={list}
-                >
-                </Marker>
-              )
-            })
-          }
-          
-        
-    
- 
+          {eventListMarker.map((list) => {
+            let i = 0;
+            return (
+              <CustumMarker
+                markerSelect={handleButtonClick}
+                isSelected={selectedButtonId === list.title}
+                id={list.title}
+                lat={list.longitudeLatitude[0]}
+                lng={list.longitudeLatitude[1]}
+                setIsOpenBottom={setIsOpenBottom}
+                setZoom={setZoom}
+                setCenter={setCenter}
+                setImg={setImg}
+                setContents={setContents}
+                setLink={setLink}
+                setPeriod={setPeriod}
+                setStreetAddress={setStreetAddress}
+                setTagList={setTagList}
+                item={list}
+              ></CustumMarker>
+            );
+          })}
         </GoogleMapReact>
       </div>
     </>
@@ -493,33 +447,38 @@ function changeMapCenter(isState) {
 }
 
 export async function getServerSideProps() {
-  const EventList = await db;
+  // const EventList = await db;
+  const EventList = [];
   const tagList = [];
-  // const fireStoredbEventList = await fireStoreDB.collection('eventList').get();
-  // await fireStoredbEventList.docs.map((doc) => {
-  //     eventList.push(doc.data())
-  // });
-  
+  const fireStoredbEventList = await fireStoreDB.collection("eventList").get();
+  //firestoreのドキュメントIDも同時に格納
+  let i = 0;
+  await fireStoredbEventList.docs.map((doc) => {
+    EventList.push(doc.data());
+    EventList[i].docId = doc.id;
+    i++;
+    console.log(EventList);
+  });
 
-  const createEventList = []
-  const fireStoredbCreateEvent = await fireStoreDB.collection('createEvent').get();
+  const createEventList = [];
+  const fireStoredbCreateEvent = await fireStoreDB
+    .collection("createEvent")
+    .get();
   await fireStoredbCreateEvent.docs.map((doc) => {
-        createEventList.push(doc.data())
+    createEventList.push(doc.data());
   });
 
-  const userTagList = []
-  const fireStoredbUserTagList = await fireStoreDB.collection('users').get();
+  const userTagList = [];
+  const fireStoredbUserTagList = await fireStoreDB.collection("users").get();
   await fireStoredbUserTagList.docs.map((doc) => {
-        userTagList.push(doc.data())
+    userTagList.push(doc.data());
   });
-  
+
   return {
     props: {
       EventList,
       createEventList,
-      userTagList
+      userTagList,
     },
-  }
+  };
 }
-
-
