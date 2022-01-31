@@ -3,7 +3,45 @@ import React, { useState, useEffect } from "react";
 
 const Marker = (props: any) => {
   const { color, name, id } = props;
+  const zoom = props.zoom;
 
+  function hoiceEventItemSetMarkerPosition(v, z) {
+    console.log(z);
+    console.log(v);
+    const Z = z;
+    const a = { zoom: 13 };
+    if (Z.zoom === a.zoom) {
+      console.log("ok");
+    } else {
+      console.log("no");
+    }
+
+    switch (z.zoom) {
+      case 10 || zoom > 10:
+        return { lat: v.lat - 0.23, lng: v.lng };
+        break;
+      case 11:
+        return { lat: 1, lng: 1 };
+        break;
+      case 12:
+        return { lat: v.lat - 0.048, lng: v.lng };
+        break;
+      case 13:
+        return { lat: v.lat - 0.025, lng: v.lng };
+        break;
+      case 14:
+        return { lat: v.lat - 0.012, lng: v.lng };
+        break;
+      case 15:
+        return { lat: v.lat - 0.0062, lng: v.lng };
+        break;
+      case 16 || zoom > 10:
+        return { lat: v.lat - 0.0032, lng: v.lng };
+        break;
+      default:
+        break;
+    }
+  }
   return (
     <>
       <div
@@ -12,13 +50,30 @@ const Marker = (props: any) => {
         style={{ backgroundColor: props.isSelected ? "red" : "blue" }}
         id={id}
         onClick={() => {
+          props.setmapHeight("60%");
           props.setIsOpenBottom(true);
-          props.setZoom(15);
+          // props.setZoom(15);
+          props.choiceEventItemSetMarkerPosition(
+            {
+              lat: Number(props.item.longitudeLatitude[0]),
+              lng: Number(props.item.longitudeLatitude[1]),
+            },
+            props.zoom
+          );
+          // props.setCenter({
+          //   lat: Number(props.item.longitudeLatitude[0]),
+          //   lng: Number(props.item.longitudeLatitude[1]),
+          // });
+          // props.setCenter(
+          //   hoiceEventItemSetMarkerPosition(
+          //     {
+          //       lat: Number(props.item.longitudeLatitude[0]),
+          //       lng: Number(props.item.longitudeLatitude[1]),
+          //     },
+          //     zoom
+          //   )
+          // );
           props.setImg(props.item.thumbnail);
-          props.setCenter({
-            lat: Number(props.item.longitudeLatitude[0]) - 0.005,
-            lng: Number(props.item.longitudeLatitude[1]),
-          });
           props.setContents(props.item.contents);
           props.setLink(props.item.link);
           props.setPeriod(props.item.period);

@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
-import GoogleMapReact, { MapOptions, Maps } from "google-map-react";
+import GoogleMapReact, {
+  MapOptions,
+  Maps,
+  ChangeEventValue,
+} from "google-map-react";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import CustumMarker from "../components/map/marker";
 import PersonMarker from "../components/map/PersonMarker";
@@ -10,15 +14,67 @@ import NavBar from "../components/NavBar";
 import { auth, fireStoreDB, firebaseUser } from "../src/firebase";
 import Geocode from "react-geocode";
 import ModalEventList from "../components/ModalEventList";
+import { commonCss } from "../components/css/css";
 
 import { db } from "../db/db";
+import { Drawer, useTheme } from "@material-ui/core";
+import { NoEncryptionTwoTone } from "@material-ui/icons";
 
 const APIKEY = "";
 Geocode.setApiKey(`${process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}`);
 
+//
+//     [theme.breakpoints.up("xl")]: {
+//       width: drawerWidth,
+//       flexShrink: 0,
+//     },
+
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      width: "100%",
+      position: "fixed",
+      top: "9vh",
+      zIndex: 1,
+      height: "84vh",
+      [theme.breakpoints.up("sm")]: {
+        height: "91vh",
+        flexShrink: 0,
+      },
+    },
+    myLocationButton: {
+      position: "fixed",
+      zIndex: 20,
+      right: "10px",
+      bottom: "19vh",
+      [theme.breakpoints.up("sm")]: {
+        bottom: "11vh",
+      },
+    },
+    drawerPaper: {
+      [theme.breakpoints.up("sm")]: {
+        width: "60%",
+        height: "100vh",
+        backgroundColor: "rgba(255, 255, 255, 0.47)",
+        flexShrink: 0,
+        padding: 10,
+        right: "0 !important",
+        left: "auto !important",
+      },
+      [theme.breakpoints.down("xs")]: {
+        backgroundColor: "rgba(255, 255, 255, 0.47)",
+        width: "100%",
+        flexShrink: 0,
+        padding: 15,
+      },
+    },
+  })
+);
+
 export default function CreateMaps(props) {
+  const classes = useStyles();
+  const commonClasses = commonCss();
   const createMapOptions = (maps: Maps): MapOptions => {
-    // console.log(props.userTagList)
     return {
       mapTypeControlOptions: {
         position: maps.ControlPosition.TOP_RIGHT,
@@ -28,19 +84,12 @@ export default function CreateMaps(props) {
       scaleControl: false,
       streetViewControl: false,
       fullscreenControl: false,
-      showingInfoWindow: false,
+      clickableIcons: false,
       styles: [
         {
           featureType: "water",
           elementType: "geometry",
-          stylers: [
-            {
-              color: "#e9e9e9",
-            },
-            {
-              lightness: 17,
-            },
-          ],
+          stylers: [{ color: "#e9e9e9" }, { lightness: 17 }],
         },
         {
           featureType: "landscape",
@@ -57,14 +106,7 @@ export default function CreateMaps(props) {
         {
           featureType: "road.highway",
           elementType: "geometry.fill",
-          stylers: [
-            {
-              color: "#ffffff",
-            },
-            {
-              lightness: 17,
-            },
-          ],
+          stylers: [{ color: "#ffffff" }, { lightness: 17 }],
         },
         {
           featureType: "road.highway",
@@ -210,7 +252,7 @@ export default function CreateMaps(props) {
   const [eventList, setEventList] = useState(props.EventList);
   const [eventListMarker, setEventListMarker] = useState(props.EventList);
   const [center, setCenter] = useState({ lat: 34.665442, lng: 135.432338 });
-  const [zoom, setZoom] = useState(13);
+  const [zoom, setZoom] = useState<MapProps>({ zoom: 13 });
   const [currentPosition, setCurrentPosition] = useState({
     lat: 34.665442,
     lng: 135.432338,
@@ -223,8 +265,10 @@ export default function CreateMaps(props) {
   const [period, setPeriod] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
   const [tagList, setTagList] = useState("");
-  const [modalHidden, setmodallHidden] = useState(true);
+  const [modalEventListHidden, setmodalEventListHidden] = useState(true);
   const [selectedButtonId, setselectedButtonId] = useState(null);
+  const [mapHeight, setmapHeight] = useState("100%");
+  const theme = useTheme();
 
   function handleButtonClick(buttonId) {
     setselectedButtonId(buttonId);
@@ -247,15 +291,46 @@ export default function CreateMaps(props) {
     await setCenter({ lat: latitude, lng: longitude });
   }
 
-  //マップのズーム倍率がディフォルト14に戻るようにする関数
-  async function initizalZoomValue() {
-    await setZoom(13);
-    await setZoom(14);
+  //ボタンなどで使用する関数現在のマップのズーム倍率を参照し、10~16の値であればそのままの倍率を維持する。それ以外は以下のように条件分岐するして倍率を変更する。
+  function initizalZoomValue() {
+    if (zoom.zoom < 10) {
+      setZoom({ zoom: 10 });
+    } else if (zoom.zoom > 16) {
+      setZoom({ zoom: 16 });
+    }
   }
 
   //イベントリストで要素をクリックしたときに位置が変わる
   function changeMapCenter(isState) {
     setCenter(isState);
+  }
+
+  // ↓マップの倍率の状態を確認する為の記述
+  interface MapProps {
+    zoom: number;
+  }
+  const changeMap = (v: ChangeEventValue) => {
+    const nextMapProps = {
+      zoom: v.zoom,
+    };
+    setZoom(nextMapProps);
+  };
+  useEffect(() => {
+    // TODO: mapのzoom状態変更時に合わせて処理を入れる
+    console.log(zoom);
+  }, [zoom]);
+  //↑マップの倍率の状態を確認する為の記述
+
+  function choiceEventItemSetMarkerPosition(v, z) {
+    if (z.zoom < 10) {
+      initizalZoomValue();
+      setCenter({ lat: v.lat, lng: v.lng });
+    } else if (z.zoom > 16) {
+      initizalZoomValue();
+      setCenter({ lat: v.lat, lng: v.lng });
+    } else {
+      setCenter({ lat: v.lat, lng: v.lng });
+    }
   }
 
   //ページ表示時に現在位置を取得してマップ上に表示する関数
@@ -287,81 +362,46 @@ export default function CreateMaps(props) {
   }
   getgeolocation();
 
-  //マップが読み込まれるときにマーカーなどを配置する関数
-  // const handleApiLoaded =
-  //   useEffect(() => {
-  //   ({ map, maps }) => {
-
-  //     eventList.map((db) => {
-  //     let lat = Number(db.longitudeLatitude[0])
-  //     let lng = Number(db.longitudeLatitude[1])
-  //     new maps.Marker({
-  //       position: { lat: lat, lng: lng },
-  //       map,
-  //     }).addListener("click", () => {
-  //       map.setCenter({ lat: (lat - 0.011), lng: lng });
-  //       map.setZoom(14);
-  //       setIsOpenBottom(true);
-  //       setImg(db.thumbnail);
-  //       setContents(db.contents);
-  //       setLink(db.link);
-  //       setPeriod(db.period);
-  //       setStreetAddress(db.streetAdress);
-  //       setTagList(db.tagList);
-  //     });
-  //   })
-
-  //     props.createEventList.map((db) => {
-  //       // Geocode.fromAddress(db.streetAddress).then(
-  //         // (response) => {
-  //           // const { lat, lng }:{lat:number,lng:number} = response.results[0].geometry.location;
-  //       const lat =db.longitudeLatitude.lat
-  //       const lng =db.longitudeLatitude.lng
-  //       new maps.Marker({
-  //         position: { lat:lat , lng:lng },
-  //         map,
-  //       }).addListener("click", () => {
-  //         map.setCenter({ lat: (lat - 0.011), lng: lng });
-  //         map.setZoom(14);
-  //         setIsOpenBottom(true);
-  //         setImg(db.thumbnail);
-  //         setContents(db.contents);
-  //         setLink(db.link);
-  //         setPeriod(db.period);
-  //         setStreetAddress(db.streetAdress);
-  //         setTagList(db.tagList);
-  //       })
-  //     // },
-  //       //   (error) => {
-  //       //     console.error(error);
-  //       //   }
-  //       // );
-  //     })
-  //   }
-
-  //      }, [eventList]);
-
   return (
     <>
-      <NavBar />
+      <NavBar
+        setmodalEventListHidden={setmodalEventListHidden}
+        modalEventListHidden={modalEventListHidden}
+      />
       {/* <ResponsiveAppBar /> */}
       <BottomMenuBar
-        setmodallHidden={setmodallHidden}
-        modalHidden={modalHidden}
+        setmodalEventListHidden={setmodalEventListHidden}
+        modalEventListHidden={modalEventListHidden}
       />
-      <ModalEventList
-        initialEventList={props.EventList}
-        modalHidden={modalHidden}
-        userTagList={props.userTagList}
-        EventList={eventList}
-        setEventListMarker={setEventListMarker}
-        CreateEventList={props.createEventList}
-        setmodallHidden={setmodallHidden}
-        changeMapCenter={changeMapCenter}
-        setEventList={setEventList}
-        setselectedButtonId={setselectedButtonId}
-      />
+
+      <Drawer
+        style={{ right: "0 !important", left: "none !important" }}
+        variant="temporary"
+        anchor={"bottom"}
+        open={!modalEventListHidden}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
+      >
+        <ModalEventList
+          initialEventList={props.EventList}
+          modalEventListHidden={modalEventListHidden}
+          userTagList={props.userTagList}
+          EventList={eventList}
+          setEventListMarker={setEventListMarker}
+          CreateEventList={props.createEventList}
+          setmodalEventListHidden={setmodalEventListHidden}
+          changeMapCenter={changeMapCenter}
+          setEventList={setEventList}
+          setselectedButtonId={setselectedButtonId}
+        />
+      </Drawer>
+
       <ModalBottom
+        setmapHeight={setmapHeight}
         modalIsOpenBottom={modalIsOpenBottom}
         setIsOpenBottom={setIsOpenBottom}
         img={img}
@@ -373,26 +413,13 @@ export default function CreateMaps(props) {
         changeMarker={handleButtonClick}
       />
 
-      <div
-        style={{
-          height: "84vh",
-          width: "100%",
-          position: "fixed",
-          top: "9vh",
-          zIndex: 1,
-        }}
-      >
+      <div className={classes.root}>
         {/* 現在位置へ戻すボタン */}
         {center === { lat: 0, lng: 0 } ? (
           <div>n</div>
         ) : (
           <div
-            style={{
-              position: "fixed",
-              zIndex: 20,
-              right: "10px",
-              bottom: "18vh",
-            }}
+            className={commonClasses.buttonTop}
             onClick={() => {
               navigator.geolocation.getCurrentPosition(successCallback);
               initizalZoomValue();
@@ -402,45 +429,51 @@ export default function CreateMaps(props) {
           </div>
         )}
 
-        <GoogleMapReact
-          bootstrapURLKeys={{ key: APIKEY }}
-          center={center}
-          // center={{ lat: center.lat, lng: center.lng }}
-          defaultZoom={14}
-          zoom={zoom}
-          // onGoogleApiLoaded={handleApiLoaded}
-          options={createMapOptions}
-        >
-          <PersonMarker
-            lat={currentPosition.lat}
-            lng={currentPosition.lng}
-            name="My CustumMarker"
-            color="red"
-          />
-
-          {eventListMarker.map((list) => {
-            let i = 0;
-            return (
-              <CustumMarker
-                markerSelect={handleButtonClick}
-                isSelected={selectedButtonId === list.title}
-                id={list.title}
-                lat={list.longitudeLatitude[0]}
-                lng={list.longitudeLatitude[1]}
-                setIsOpenBottom={setIsOpenBottom}
-                setZoom={setZoom}
-                setCenter={setCenter}
-                setImg={setImg}
-                setContents={setContents}
-                setLink={setLink}
-                setPeriod={setPeriod}
-                setStreetAddress={setStreetAddress}
-                setTagList={setTagList}
-                item={list}
-              ></CustumMarker>
-            );
-          })}
-        </GoogleMapReact>
+        <div style={{ height: mapHeight }}>
+          <GoogleMapReact
+            bootstrapURLKeys={{ key: APIKEY }}
+            center={center}
+            defaultZoom={14}
+            zoom={zoom.zoom}
+            onChange={changeMap}
+            options={createMapOptions}
+            // center={{ lat: center.lat, lng: center.lng }}
+            // onGoogleApiLoaded={handleApiLoaded}
+          >
+            <PersonMarker
+              lat={currentPosition.lat}
+              lng={currentPosition.lng}
+              name="My CustumMarker"
+            />
+            {eventListMarker.map((list) => {
+              let i = 0;
+              return (
+                <CustumMarker
+                  setmapHeight={setmapHeight}
+                  choiceEventItemSetMarkerPosition={
+                    choiceEventItemSetMarkerPosition
+                  }
+                  zoom={zoom}
+                  markerSelect={handleButtonClick}
+                  isSelected={selectedButtonId === list.title}
+                  id={list.title}
+                  lat={list.longitudeLatitude[0]}
+                  lng={list.longitudeLatitude[1]}
+                  setIsOpenBottom={setIsOpenBottom}
+                  // setZoom={setZoom}
+                  // setCenter={setCenter}
+                  setImg={setImg}
+                  setContents={setContents}
+                  setLink={setLink}
+                  setPeriod={setPeriod}
+                  setStreetAddress={setStreetAddress}
+                  setTagList={setTagList}
+                  item={list}
+                ></CustumMarker>
+              );
+            })}
+          </GoogleMapReact>
+        </div>
       </div>
     </>
   );

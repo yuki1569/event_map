@@ -1,22 +1,22 @@
-import React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import React from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import Fab from "@material-ui/core/Fab";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      '& > *': {
+      "& > *": {
         margin: theme.spacing(1),
       },
     },
     extendedIcon: {
-      marginRight: theme.spacing(1),
+      // marginRight: theme.spacing(1),
     },
-  }),
+  })
 );
 
-export default function ModalCloseButton() {
+export default function DrawerCloseButton() {
   const classes = useStyles();
 
   return (

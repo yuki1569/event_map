@@ -70,14 +70,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn(props) {
   const classes = useStyles();
-  const [modalHidden, setmodallHidden] = useState(true);
+  const [modalEventListHidden, setmodalEventListHidden] = useState(true);
 
   return (
     <>
       <NavBar />
       <BottomMenuBar
-        modalHidden={modalHidden}
-        setmodallHidden={setmodallHidden}
+        modalEventListHidden={modalEventListHidden}
+        setmodalEventListHidden={setmodalEventListHidden}
       />
 
       <div className={classes.center}>

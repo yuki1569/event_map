@@ -82,10 +82,11 @@ const theme = createTheme({
     overrides: {
         MuiToolbar: {
             root: {
-                justifyContent: 'space-between'
+              justifyContent: 'space-between',
+              
             }
-        },
-  },
+      },
+    },
     
 });
 

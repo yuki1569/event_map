@@ -12,8 +12,23 @@ import Grid from "@material-ui/core/Grid";
 import EventListItem from "./ModalEventListItem";
 import { Collections } from "@material-ui/icons";
 import firebase from "firebase";
+import { commonCss } from "./css/css";
+import { createStyles, makeStyles, Theme } from "@material-ui/core";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    closeButton: {
+      position: "fixed",
+      zIndex: 80,
+      right: "1vh",
+      bottom: "2vh",
+    },
+  })
+);
 
 export default function ModalEventList(props) {
+  const commonClasses = commonCss();
+  const classes = useStyles();
   function toggle(bool) {
     if (bool) {
       return "none";
@@ -21,34 +36,6 @@ export default function ModalEventList(props) {
       return "";
     }
   }
-
-  //モーダルウィンドウ用のスタイル
-  const customStyles = {
-    overlay: {
-      position: "fixed",
-      left: 0,
-      backgroundColor: "rgba(0,0,0,0.3)",
-      zIndex: 10,
-      display: toggle(props.modalHidden),
-    },
-
-    content: {
-      backgroundColor: "rgba(0,0,0,0)",
-      border: "hidden",
-      listStyle: "none",
-      // display: 'flex',
-      // flexWrap: 'wrap',
-      marginTop: "25px",
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      width: "87%",
-      height: "82%",
-      transform: "translate(-50%, -50%)",
-    },
-  };
 
   const initialEventList = props.EventList;
   const [modalIsOpenDetails, setIsOpenDetails] = useState(false);
@@ -69,22 +56,6 @@ export default function ModalEventList(props) {
   const [switchSort, setSwitchSort] = useState("");
 
   const [onRecommendValue, setOnRecommendValue] = useState([]);
-  // const [searchValue, setSearchValue] = useState([])
-
-  // const AlleventList = Object.assign(EventList, CreateEventList);
-
-  // const tag = []
-  // AlleventList.map(list => {
-  //   tag.push(list.tagList)
-  // })
-
-  // console.log(tag);
-  // console.log(AlleventList);
-
-  // useEffect(() => {
-  //   setSearchValue(searchValue)
-  //   // setModalEventList(searchValue)
-  // }, [searchValue])
 
   useEffect(() => {
     setOnRecommendValue(onRecommendValue);
@@ -139,7 +110,7 @@ export default function ModalEventList(props) {
           break;
       }
 
-      await setModalEventList(EventList);
+      setModalEventList(EventList);
     };
     searchEventList();
   }, [likeUpDate]);
@@ -309,197 +280,179 @@ export default function ModalEventList(props) {
 
       {/* イベントリストモーダルを閉じるボタン */}
       <div
-        style={{
-          position: "fixed",
-          zIndex: 20,
-          right: "10px",
-          bottom: "8vh",
-          display: toggle(props.modalHidden),
-        }}
+        className={classes.closeButton}
         onClick={() => {
-          props.setmodallHidden(true);
+          props.setmodalEventListHidden(true);
         }}
       >
         <ModalCloseButton />
       </div>
 
       {/* イベントリストモーダルの中身 */}
-      <Modal
+      {/* <Modal
         isOpen={true}
         // isOpen={modalIsOpenEventList}
         // onRequestClose={() => setIsOpenEventList(false)}
         style={customStyles}
-      >
-        <div style={{ marginTop: "0", display: "inline-block" }}>
-          <SearchTextField
-            initialEventList={initialEventList}
-            modalEventList={modalEventList}
-            setModalEventList={setModalEventList}
-            // setSearchValue={setSearchValue}
-            EventList={props.EventList}
-            CreateEventList={props.CreateEventList}
-            setEventListMarker={props.setEventListMarker}
-          />
-        </div>
-        <SwitchCom
-          initialEventList={props.initialEventList}
-          userTagList={props.userTagList}
-          setOnRecommendValue={setOnRecommendValue}
+      > */}
+      <div style={{ marginTop: "0", display: "inline-block" }}>
+        <SearchTextField
+          initialEventList={initialEventList}
+          modalEventList={modalEventList}
           setModalEventList={setModalEventList}
+          // setSearchValue={setSearchValue}
           EventList={props.EventList}
           CreateEventList={props.CreateEventList}
           setEventListMarker={props.setEventListMarker}
-          setEventList={props.setEventList}
         />
+      </div>
+      <SwitchCom
+        initialEventList={props.initialEventList}
+        userTagList={props.userTagList}
+        setOnRecommendValue={setOnRecommendValue}
+        setModalEventList={setModalEventList}
+        EventList={props.EventList}
+        CreateEventList={props.CreateEventList}
+        setEventListMarker={props.setEventListMarker}
+        setEventList={props.setEventList}
+      />
 
-        <ToggleButtons
-          sortDateAscendingOrder={() =>
-            setModalEventList(sortDateAscendingOrder(modalEventList))
-          }
-          sortDateDescendingOrder={() =>
-            setModalEventList(sortDateDescendingOrder(modalEventList))
-          }
-          sortDistanceAscendingOrder={() =>
-            setModalEventList(sortDistanceAscendingOrder(modalEventList))
-          }
-          sortDistanceDescendingOrder={() =>
-            setModalEventList(sortDistanceDescendingOrder(modalEventList))
-          }
-        />
+      <ToggleButtons
+        sortDateAscendingOrder={() =>
+          setModalEventList(sortDateAscendingOrder(modalEventList))
+        }
+        sortDateDescendingOrder={() =>
+          setModalEventList(sortDateDescendingOrder(modalEventList))
+        }
+        sortDistanceAscendingOrder={() =>
+          setModalEventList(sortDistanceAscendingOrder(modalEventList))
+        }
+        sortDistanceDescendingOrder={() =>
+          setModalEventList(sortDistanceDescendingOrder(modalEventList))
+        }
+      />
 
-        {/* お気に入りのみ表示 */}
-        <div id="button">
-          <button
-            onClick={() => {
-              setfavoritehide(!favoritehide);
-              setListUpDate(!listUpDate);
-            }}
-          >
-            お気に入りのみ表示
-          </button>
-        </div>
+      {/* お気に入りのみ表示ボタン */}
+      <div id="button">
+        <button
+          onClick={() => {
+            setfavoritehide(!favoritehide);
+            setListUpDate(!listUpDate);
+          }}
+        >
+          お気に入りのみ表示
+        </button>
+      </div>
 
-        {/* お気に入りのみ表示 */}
-        <div id="favoriteList" style={{ display: toggle(favoritehide) }}>
-          {auth.currentUser ? (
-            <Grid container spacing={2}>
-              {bookMark.map((value, index) => {
-                console.log(value.like);
-                //ログイン中のユーザーがお気に入り登録をしているか
-                if (value.like.includes(firebaseUser().uid)) {
-                  return (
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                      <EventListItem
-                        {...value}
-                        key={index}
-                        distance={distance(
-                          currentPosition.lat,
-                          currentPosition.lng,
-                          value.longitudeLatitude[0],
-                          value.longitudeLatitude[1]
-                        )}
-                        changeMapCenter={props.changeMapCenter}
-                        setselectedButtonId={props.setselectedButtonId}
-                      />
-                    </Grid>
-                  );
-                } else {
-                  return <div>n</div>;
-                }
-              })}
-            </Grid>
-          ) : (
-            <div>n</div>
-          )}
-        </div>
-
-        {/* イベントリスト全て表示 */}
-        <div id="eventList" style={{ display: toggle(!favoritehide) }}>
+      {/* お気に入りのみ表示 */}
+      <div id="favoriteList" style={{ display: toggle(favoritehide) }}>
+        {auth.currentUser ? (
           <Grid container spacing={2}>
-            {modalEventList.map((value, index) => (
-              <Grid item xs={12} sm={6} md={4} lg={3}>
-                <EventListItem
-                  {...value}
-                  key={index}
-                  distance={distance(
-                    currentPosition.lat,
-                    currentPosition.lng,
-                    value.longitudeLatitude[0],
-                    value.longitudeLatitude[1]
-                  )}
-                  changeMapCenter={props.changeMapCenter}
-                  setselectedButtonId={props.setselectedButtonId}
-                />
-
-                {auth.currentUser ? (
-                  value.like.includes(firebaseUser().uid) ? (
-                    <div
-                      onClick={() => {
-                        fireStoreDB
-                          .collection("eventList")
-                          .doc(value.docId)
-                          .set(
-                            {
-                              like: firebase.firestore.FieldValue.arrayRemove(
-                                firebaseUser().uid
-                              ),
-                            },
-                            { merge: true }
-                          );
-                        setlikeUpDate(!likeUpDate);
-                      }}
-                    >
-                      <Suspense fallback={<p>Loading...</p>}>
-                        <IconButton color="secondary">
-                          <FavoriteIcon />
-                        </IconButton>
-                      </Suspense>
-                    </div>
-                  ) : (
-                    <div
-                      onClick={() => {
-                        // fireStoreDB.collection("bookMark").add({
-                        //   uid: firebaseUser().uid,
-                        //   title: value.title,
-                        //   // subTitle:value.subTitle,
-                        //   thumbnail: value.thumbnail,
-                        //   link: value.link,
-                        //   contents: value.contents,
-                        //   period: value.period,
-                        //   tagList: value.tagList,
-                        //   streetAddress: value.streetAddress,
-                        //   longitudeLatitude: value.longitudeLatitude,
-                        // });
-                        fireStoreDB
-                          .collection("eventList")
-                          .doc(value.docId)
-                          .set(
-                            {
-                              like: firebase.firestore.FieldValue.arrayUnion(
-                                firebaseUser().uid
-                              ),
-                            },
-                            { merge: true }
-                          );
-                        console.log(value.docId);
-                        setlikeUpDate(!likeUpDate);
-                      }}
-                    >
-                      <Suspense fallback={<p>Loading...</p>}>
-                        <IconButton color="inherit">
-                          <FavoriteIcon />
-                        </IconButton>
-                      </Suspense>
-                    </div>
-                  )
-                ) : (
-                  <div></div>
-                )}
-              </Grid>
-            ))}
+            {bookMark.map((value, index) => {
+              console.log(value.like);
+              //ログイン中のユーザーがお気に入り登録をしているか
+              if (value.like.includes(firebaseUser().uid)) {
+                return (
+                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <EventListItem
+                      {...value}
+                      key={index}
+                      distance={distance(
+                        currentPosition.lat,
+                        currentPosition.lng,
+                        value.longitudeLatitude[0],
+                        value.longitudeLatitude[1]
+                      )}
+                      changeMapCenter={props.changeMapCenter}
+                      setselectedButtonId={props.setselectedButtonId}
+                    />
+                  </Grid>
+                );
+              } else {
+                return <></>;
+              }
+            })}
           </Grid>
-        </div>
-      </Modal>
+        ) : (
+          <></>
+        )}
+      </div>
+
+      {/* イベントリスト全て表示 */}
+      <div id="eventList" style={{ display: toggle(!favoritehide) }}>
+        <Grid container spacing={2}>
+          {modalEventList.map((value, index) => (
+            <Grid item xs={12} sm={6} md={4} lg={3}>
+              <EventListItem
+                {...value}
+                key={index}
+                distance={distance(
+                  currentPosition.lat,
+                  currentPosition.lng,
+                  value.longitudeLatitude[0],
+                  value.longitudeLatitude[1]
+                )}
+                changeMapCenter={props.changeMapCenter}
+                setselectedButtonId={props.setselectedButtonId}
+              />
+
+              {auth.currentUser ? (
+                value.like.includes(firebaseUser().uid) ? (
+                  <div
+                    onClick={() => {
+                      fireStoreDB
+                        .collection("eventList")
+                        .doc(value.docId)
+                        .set(
+                          {
+                            like: firebase.firestore.FieldValue.arrayRemove(
+                              firebaseUser().uid
+                            ),
+                          },
+                          { merge: true }
+                        );
+                      setlikeUpDate(!likeUpDate);
+                    }}
+                  >
+                    <Suspense fallback={<p>Loading...</p>}>
+                      <IconButton color="secondary">
+                        <FavoriteIcon />
+                      </IconButton>
+                    </Suspense>
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => {
+                      fireStoreDB
+                        .collection("eventList")
+                        .doc(value.docId)
+                        .set(
+                          {
+                            like: firebase.firestore.FieldValue.arrayUnion(
+                              firebaseUser().uid
+                            ),
+                          },
+                          { merge: true }
+                        );
+                      console.log(value.docId);
+                      setlikeUpDate(!likeUpDate);
+                    }}
+                  >
+                    <Suspense fallback={<p>Loading...</p>}>
+                      <IconButton color="inherit">
+                        <FavoriteIcon />
+                      </IconButton>
+                    </Suspense>
+                  </div>
+                )
+              ) : (
+                <div></div>
+              )}
+            </Grid>
+          ))}
+        </Grid>
+      </div>
+      {/* </Modal> */}
     </div>
   );
 }

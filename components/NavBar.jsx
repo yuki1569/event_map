@@ -1,13 +1,5 @@
 import React from "react";
-import AppBar from "@material-ui/core/AppBar";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Divider from "@material-ui/core/Divider";
-import Drawer from "@material-ui/core/Drawer";
-import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -30,7 +22,8 @@ const useStyles = makeStyles((theme) =>
     root: {
       display: "flex",
       backgroundColor: theme.palette.primary.main,
-      minHeight: "none",
+      height: '10vh',
+      zIndex: 10
     },
     drawer: {
       [theme.breakpoints.up("xl")]: {
@@ -39,7 +32,7 @@ const useStyles = makeStyles((theme) =>
       },
     },
     toolBar: {
-      height: "9vh",
+      // height: "9vh",
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -112,7 +105,6 @@ const pages = [
   },
 ];
 
-// const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 export default function NavBar(props) {
@@ -172,7 +164,8 @@ export default function NavBar(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <div className={classes.root}>
+    <>
+    {/* <div className={classes.root}> */}
       {/* <CssBaseline /> */}
       {/* <nav className={classes.drawer} aria-label="mailbox folders">
         <Hidden smUp implementation="css">
@@ -223,8 +216,7 @@ export default function NavBar(props) {
         </Toolbar>
       </AppBar> */}
 
-      {/* 追加 */}
-      <Toolbar className={classes.toolBar}>
+      <Toolbar className={classes.root}>
         <Typography
           variant="h6"
           noWrap
@@ -232,7 +224,7 @@ export default function NavBar(props) {
           sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
         ></Typography>
 
-        <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+        <Box sx={{minHeight: "none", flexGrow: 1, display:  { xs: "flex", sm: "none" }, position:"right" }}>
           <IconButton
             size="medium"
             aria-label="account of current user"
@@ -269,7 +261,7 @@ export default function NavBar(props) {
           </Menu>
         </Box>
 
-        <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+        <Box sx={{ flexGrow: 2, display: { xs: "none", sm: "flex" } }}>
           {pages.map((page) => (
             <Button
               key={page.title}
@@ -280,7 +272,38 @@ export default function NavBar(props) {
             </Button>
           ))}
         </Box>
+
+        <Box
+          component="div"
+          sx={{justifyContent: 'flex-end' , flexGrow: 1, display: { xs: "none", sm: "flex" } 
+          }}
+          className="serchBox"
+        >
+          {/* {pages.map((page) => (
+            <Button
+              key={page.title}
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: "white", display: "flex" }}
+            >
+              {page.title}
+            </Button>
+          ))} */}
+          <div
+            onClick={() => {
+              props.setmodalEventListHidden(!props.modalEventListHidden)
+            }}
+          >
+          <Button
+              // key={page.title}
+              sx={{ my: 2, color: "white", display: "flex" }}
+              >
+            {/* {page.title} */}
+            検索
+            </Button>
+            </div>
+        </Box>
       </Toolbar>
-    </div>
+      {/* </div> */}
+      </>
   );
 }
