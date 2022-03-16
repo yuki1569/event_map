@@ -5,7 +5,6 @@ import AdjustIcon from "@material-ui/icons/Adjust";
 
 const PersonMarker = (props: any) => {
   const { color, name, id } = props;
-  // console.log(props.item)
   return (
     <>
       <>

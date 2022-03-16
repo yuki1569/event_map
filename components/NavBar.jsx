@@ -117,7 +117,6 @@ export default function NavBar(props) {
     setMobileOpen(!mobileOpen);
   };
 
-  // 追加
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -279,26 +278,26 @@ export default function NavBar(props) {
           }}
           className="serchBox"
         >
-          {/* {pages.map((page) => (
-            <Button
-              key={page.title}
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: "white", display: "flex" }}
-            >
-              {page.title}
-            </Button>
-          ))} */}
           <div
             onClick={() => {
               props.setmodalEventListHidden(!props.modalEventListHidden)
             }}
           >
           <Button
-              // key={page.title}
               sx={{ my: 2, color: "white", display: "flex" }}
               >
-            {/* {page.title} */}
             検索
+          </Button>
+          </div>
+          <div
+            onClick={() => {
+              props.setModalLoginOpen(!props.modalLoginOpen)
+            }}
+          >
+          <Button
+              sx={{ my: 2, color: "white", display: "flex" }}
+              >
+            my設定
             </Button>
             </div>
         </Box>

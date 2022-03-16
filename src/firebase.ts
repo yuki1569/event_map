@@ -84,7 +84,6 @@ export const firebaseUser = () => {
   return firebase.auth().currentUser;
 };
 
-// export const userId = firebaseUser().uid
 
 // let user = firebase.auth().currentUser; 
 // export const name, email, photoUrl, uid, emailVerified;
@@ -101,6 +100,6 @@ export const firebaseUser = () => {
 // Logout
 export const Logout = () => {
   auth.signOut().then(() => {
-    window.location.reload();
+    // window.location.reload();
   });
 };

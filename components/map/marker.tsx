@@ -5,43 +5,39 @@ const Marker = (props: any) => {
   const { color, name, id } = props;
   const zoom = props.zoom;
 
-  function hoiceEventItemSetMarkerPosition(v, z) {
-    console.log(z);
-    console.log(v);
-    const Z = z;
-    const a = { zoom: 13 };
-    if (Z.zoom === a.zoom) {
-      console.log("ok");
-    } else {
-      console.log("no");
-    }
+  // function hoiceEventItemSetMarkerPosition(v, z) {
+  //   const Z = z;
+  //   const a = { zoom: 13 };
+  //   if (Z.zoom === a.zoom) {
+  //   } else {
+  //   }
 
-    switch (z.zoom) {
-      case 10 || zoom > 10:
-        return { lat: v.lat - 0.23, lng: v.lng };
-        break;
-      case 11:
-        return { lat: 1, lng: 1 };
-        break;
-      case 12:
-        return { lat: v.lat - 0.048, lng: v.lng };
-        break;
-      case 13:
-        return { lat: v.lat - 0.025, lng: v.lng };
-        break;
-      case 14:
-        return { lat: v.lat - 0.012, lng: v.lng };
-        break;
-      case 15:
-        return { lat: v.lat - 0.0062, lng: v.lng };
-        break;
-      case 16 || zoom > 10:
-        return { lat: v.lat - 0.0032, lng: v.lng };
-        break;
-      default:
-        break;
-    }
-  }
+  //   switch (z.zoom) {
+  //     case 10 || zoom > 10:
+  //       return { lat: v.lat - 0.23, lng: v.lng };
+  //       break;
+  //     case 11:
+  //       return { lat: 1, lng: 1 };
+  //       break;
+  //     case 12:
+  //       return { lat: v.lat - 0.048, lng: v.lng };
+  //       break;
+  //     case 13:
+  //       return { lat: v.lat - 0.025, lng: v.lng };
+  //       break;
+  //     case 14:
+  //       return { lat: v.lat - 0.012, lng: v.lng };
+  //       break;
+  //     case 15:
+  //       return { lat: v.lat - 0.0062, lng: v.lng };
+  //       break;
+  //     case 16 || zoom > 10:
+  //       return { lat: v.lat - 0.0032, lng: v.lng };
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }
   return (
     <>
       <div

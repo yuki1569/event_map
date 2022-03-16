@@ -157,8 +157,10 @@ export default function BottomMenuBar(props, modalEventListHidden) {
               color="inherit"
               // className={classes.icon}
               onClick={() => {
-                router.push("/csr/login");
-                props.setmodalEventListHidden(true);
+                // router.push("/csr/login");
+                // props.setmodalEventListHidden(true);
+
+                props.setModalLoginOpen(!props.modalLoginOpen);
               }}
             >
               <PersonIcon fontSize={"default"} />

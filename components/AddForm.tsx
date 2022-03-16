@@ -43,6 +43,7 @@ export default function AddForm(props) {
     title: "",
     subTitle: "",
     link: "",
+    like: "",
     startDate: "",
     endDate: "",
     genre: "",
@@ -93,6 +94,7 @@ export default function AddForm(props) {
             id: Math.random() * 100000,
             contents: sendData.contents,
             link: sendData.link,
+            like: "",
             endDate: sendData.endDate,
             longitudeLatitude: [lat, lng],
             period: `${sendData.startDate}～${sendData.endDate}`,
@@ -101,7 +103,7 @@ export default function AddForm(props) {
             subTitle: sendData.subTitle,
             streetAddress: sendData.place,
             startDate: sendData.startDate,
-            thumbnail: sendData.title,
+            thumbnail: "https://via.placeholder.com/640x400",
 
             // thumbnail: sendData.thumbnail,
           })
@@ -120,6 +122,7 @@ export default function AddForm(props) {
               title: "",
               subTitle: "",
               link: "",
+              like: "",
               startDate: "",
               endDate: "",
               genre: "",

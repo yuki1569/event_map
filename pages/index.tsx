@@ -11,13 +11,20 @@ import ModalBottom from "../components/ModalBottom";
 import MyLocationButton from "../components/Button/MyLocationButton";
 import BottomMenuBar from "../components/BottomMenuBar";
 import NavBar from "../components/NavBar";
-import { auth, fireStoreDB, firebaseUser } from "../src/firebase";
+import { auth, fireStoreDB, firebaseUser, Firebase } from "../src/firebase";
 import Geocode from "react-geocode";
 import ModalEventList from "../components/ModalEventList";
+import ModalLogin from "../components/ModalLogin";
 import { commonCss } from "../components/css/css";
 
 import { db } from "../db/db";
-import { Drawer, useTheme } from "@material-ui/core";
+import {
+  createMuiTheme,
+  createTheme,
+  Drawer,
+  MuiThemeProvider,
+  useTheme,
+} from "@material-ui/core";
 import { NoEncryptionTwoTone } from "@material-ui/icons";
 
 const APIKEY = "";
@@ -68,8 +75,36 @@ const useStyles = makeStyles((theme) =>
         padding: 15,
       },
     },
+    drawerPaperBottom: {
+      [theme.breakpoints.up("sm")]: {
+        width: "100%",
+        height: "40vh",
+        backgroundColor: "rgba(255, 255, 255, 1)",
+        flexShrink: 0,
+        padding: 10,
+        right: "0 !important",
+        top: "none !important",
+        left: "auto !important",
+      },
+      [theme.breakpoints.down("xs")]: {
+        backgroundColor: "rgba(255, 255, 255, 1)",
+        width: "100%",
+        flexShrink: 0,
+        padding: 15,
+      },
+    },
   })
 );
+
+const themeBottomWindow = createTheme({
+  overrides: {
+    MuiBackdrop: {
+      root: {
+        top: "none",
+      },
+    },
+  },
+});
 
 export default function CreateMaps(props) {
   const classes = useStyles();
@@ -250,6 +285,11 @@ export default function CreateMaps(props) {
     };
   };
   const [eventList, setEventList] = useState(props.EventList);
+  const [userTagList, setUserTagList] = useState(props.userTagList);
+  const [switchRecom, setSwitchRecom] = useState(false);
+  const [modalLoginOpen, setModalLoginOpen] = React.useState(false);
+  const handleModalLoginopen = () => setModalLoginOpen(!modalLoginOpen);
+
   const [eventListMarker, setEventListMarker] = useState(props.EventList);
   const [center, setCenter] = useState({ lat: 34.665442, lng: 135.432338 });
   const [zoom, setZoom] = useState<MapProps>({ zoom: 13 });
@@ -317,7 +357,6 @@ export default function CreateMaps(props) {
   };
   useEffect(() => {
     // TODO: mapのzoom状態変更時に合わせて処理を入れる
-    console.log(zoom);
   }, [zoom]);
   //↑マップの倍率の状態を確認する為の記述
 
@@ -367,11 +406,15 @@ export default function CreateMaps(props) {
       <NavBar
         setmodalEventListHidden={setmodalEventListHidden}
         modalEventListHidden={modalEventListHidden}
+        setModalLoginOpen={setModalLoginOpen}
+        modalLoginOpen={modalLoginOpen}
       />
       {/* <ResponsiveAppBar /> */}
       <BottomMenuBar
         setmodalEventListHidden={setmodalEventListHidden}
         modalEventListHidden={modalEventListHidden}
+        setModalLoginOpen={setModalLoginOpen}
+        modalLoginOpen={modalLoginOpen}
       />
 
       <Drawer
@@ -389,7 +432,6 @@ export default function CreateMaps(props) {
         <ModalEventList
           initialEventList={props.EventList}
           modalEventListHidden={modalEventListHidden}
-          userTagList={props.userTagList}
           EventList={eventList}
           setEventListMarker={setEventListMarker}
           CreateEventList={props.createEventList}
@@ -397,26 +439,52 @@ export default function CreateMaps(props) {
           changeMapCenter={changeMapCenter}
           setEventList={setEventList}
           setselectedButtonId={setselectedButtonId}
+          switchRecom={switchRecom}
+          setSwitchRecom={setSwitchRecom}
         />
       </Drawer>
 
-      <ModalBottom
-        setmapHeight={setmapHeight}
-        modalIsOpenBottom={modalIsOpenBottom}
-        setIsOpenBottom={setIsOpenBottom}
-        img={img}
-        contents={contents}
-        link={link}
-        period={period}
-        streetAdress={streetAddress}
-        tagList={tagList}
-        changeMarker={handleButtonClick}
+      <MuiThemeProvider theme={themeBottomWindow}>
+        <Drawer
+          style={{
+            top: "none !important",
+          }}
+          variant="temporary"
+          anchor={"bottom"}
+          open={modalIsOpenBottom}
+          classes={{
+            paper: classes.drawerPaperBottom,
+          }}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+        >
+          <ModalBottom
+            setmapHeight={setmapHeight}
+            modalIsOpenBottom={modalIsOpenBottom}
+            setIsOpenBottom={setIsOpenBottom}
+            img={img}
+            contents={contents}
+            link={link}
+            period={period}
+            streetAdress={streetAddress}
+            tagList={tagList}
+            changeMarker={handleButtonClick}
+          />
+        </Drawer>
+      </MuiThemeProvider>
+
+      <ModalLogin
+        modalLoginOpen={modalLoginOpen}
+        setModalLoginOpen={setModalLoginOpen}
+        userTagList={userTagList}
+        setSwitchRecom={setSwitchRecom}
       />
 
       <div className={classes.root}>
         {/* 現在位置へ戻すボタン */}
         {center === { lat: 0, lng: 0 } ? (
-          <div>n</div>
+          <></>
         ) : (
           <div
             className={commonClasses.buttonTop}
@@ -480,26 +548,30 @@ export default function CreateMaps(props) {
 }
 
 export async function getServerSideProps() {
-  // const EventList = await db;
-  const EventList = [];
-  const tagList = [];
+  // const EventList = await db
+  const Event = [];
   const fireStoredbEventList = await fireStoreDB.collection("eventList").get();
   //firestoreのドキュメントIDも同時に格納
   let i = 0;
   await fireStoredbEventList.docs.map((doc) => {
-    EventList.push(doc.data());
-    EventList[i].docId = doc.id;
+    Event.push(doc.data());
+    Event[i].docId = doc.id;
     i++;
-    console.log(EventList);
   });
 
   const createEventList = [];
   const fireStoredbCreateEvent = await fireStoreDB
     .collection("createEvent")
     .get();
+  let i2 = 0;
   await fireStoredbCreateEvent.docs.map((doc) => {
     createEventList.push(doc.data());
+    createEventList[i2].docId = doc.id;
+    i2++;
   });
+
+  let EventList;
+  EventList = await Event.concat(createEventList);
 
   const userTagList = [];
   const fireStoredbUserTagList = await fireStoreDB.collection("users").get();

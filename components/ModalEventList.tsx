@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function ModalEventList(props) {
-  const commonClasses = commonCss();
   const classes = useStyles();
   function toggle(bool) {
     if (bool) {
@@ -64,12 +63,18 @@ export default function ModalEventList(props) {
 
   useEffect(() => {
     const searchBookMark = async () => {
-      const res = await fireStoreDB.collection("eventList").get();
-      if (res.empty) return [];
+      const res1 = await fireStoreDB.collection("eventList").get();
+      const res2 = await fireStoreDB.collection("createEvent").get();
+
+      if (res1.empty) return [];
       const BookMarkList = [];
       const key = [];
 
-      res.docs.map((doc, index) => {
+      await res1.docs.map((doc, index) => {
+        BookMarkList.push(doc.data());
+        key.push(index);
+      });
+      await res2.docs.map((doc, index) => {
         BookMarkList.push(doc.data());
         key.push(index);
       });
@@ -81,12 +86,21 @@ export default function ModalEventList(props) {
 
   useEffect(() => {
     const searchEventList = async () => {
-      const res = await fireStoreDB.collection("eventList").get();
-      if (res.empty) return [];
+      const res1 = await fireStoreDB.collection("eventList").get();
+      const res2 = await fireStoreDB.collection("createEvent").get();
+
+      if (res1.empty) return [];
       const EventList = [];
       const key = [];
       let i = 0;
-      res.docs.map((doc, index) => {
+
+      await res1.docs.map((doc, index) => {
+        EventList.push(doc.data());
+        EventList[i].docId = doc.id;
+        i++;
+        key.push(index);
+      });
+      await res2.docs.map((doc, index) => {
         EventList.push(doc.data());
         EventList[i].docId = doc.id;
         i++;
@@ -180,6 +194,7 @@ export default function ModalEventList(props) {
     });
     return db;
   }
+
   function sortDistanceAscendingOrder(modalEventList) {
     setSwitchSort("DistanceAscending");
     modalEventList.sort(function (a, b) {
@@ -271,12 +286,12 @@ export default function ModalEventList(props) {
   return (
     <div>
       {/* リストごとの詳細画面用モーダル */}
-      <ModalEventListDetails
+      {/* <ModalEventListDetails
         modalIsOpenDetails={modalIsOpenDetails}
         setIsOpenDetails={setIsOpenDetails}
         img={img}
         contents={contents}
-      />
+      /> */}
 
       {/* イベントリストモーダルを閉じるボタン */}
       <div
@@ -306,6 +321,7 @@ export default function ModalEventList(props) {
           setEventListMarker={props.setEventListMarker}
         />
       </div>
+
       <SwitchCom
         initialEventList={props.initialEventList}
         userTagList={props.userTagList}
@@ -315,6 +331,9 @@ export default function ModalEventList(props) {
         CreateEventList={props.CreateEventList}
         setEventListMarker={props.setEventListMarker}
         setEventList={props.setEventList}
+        switchRecom={props.switchRecom}
+        setSwitchRecom={props.setSwitchRecom}
+        setfavoritehide={setfavoritehide}
       />
 
       <ToggleButtons
@@ -338,6 +357,7 @@ export default function ModalEventList(props) {
           onClick={() => {
             setfavoritehide(!favoritehide);
             setListUpDate(!listUpDate);
+            props.setSwitchRecom(false);
           }}
         >
           お気に入りのみ表示
@@ -349,7 +369,6 @@ export default function ModalEventList(props) {
         {auth.currentUser ? (
           <Grid container spacing={2}>
             {bookMark.map((value, index) => {
-              console.log(value.like);
               //ログイン中のユーザーがお気に入り登録をしているか
               if (value.like.includes(firebaseUser().uid)) {
                 return (
@@ -401,7 +420,13 @@ export default function ModalEventList(props) {
                   <div
                     onClick={() => {
                       fireStoreDB
-                        .collection("eventList")
+                        .collection(
+                          `${
+                            value.hasOwnProperty("postUid")
+                              ? "createEvent"
+                              : "eventList"
+                          }`
+                        )
                         .doc(value.docId)
                         .set(
                           {
@@ -424,7 +449,13 @@ export default function ModalEventList(props) {
                   <div
                     onClick={() => {
                       fireStoreDB
-                        .collection("eventList")
+                        .collection(
+                          `${
+                            value.hasOwnProperty("postUid")
+                              ? "createEvent"
+                              : "eventList"
+                          }`
+                        )
                         .doc(value.docId)
                         .set(
                           {
@@ -434,7 +465,6 @@ export default function ModalEventList(props) {
                           },
                           { merge: true }
                         );
-                      console.log(value.docId);
                       setlikeUpDate(!likeUpDate);
                     }}
                   >
