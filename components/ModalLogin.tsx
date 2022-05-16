@@ -6,6 +6,7 @@ import Fade from "@mui/material/Fade";
 import SignIn from "./login";
 import { auth, firebaseUser, fireStoreDB, Firebase } from "../src/firebase";
 import { useEffect } from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core";
 
 const style = {
   position: "absolute" as "absolute",
@@ -20,7 +21,24 @@ const style = {
   p: 4,
 };
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    modal: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    paper: {
+      backgroundColor: theme.palette.background.paper,
+      border: "2px solid #000",
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
+  })
+);
+
 export default function ModalLogin(props) {
+  const classes = useStyles();
   let lists = props.userTagList;
 
   let initFirebaseAuth = () => {
@@ -81,8 +99,9 @@ export default function ModalLogin(props) {
   }, []);
 
   return (
-    <div>
+    <>
       <Modal
+        className={classes.modal}
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={props.modalLoginOpen}
@@ -94,9 +113,9 @@ export default function ModalLogin(props) {
         }}
       >
         <Fade in={props.modalLoginOpen}>
-          <Box sx={style}>
-            {/* <Typography id="transition-modal-title" variant="h6" component="h2"> */}
-
+          {/* <Box sx={style}> */}
+          {/* <Typography id="transition-modal-title" variant="h6" component="h2"> */}
+          <div className={classes.paper}>
             <SignIn
               userTagList={props.userTagList}
               checkedAlone={checkedAlone}
@@ -113,9 +132,10 @@ export default function ModalLogin(props) {
               setCheckedKid3={setCheckedKid3}
               setSwitchRecom={props.setSwitchRecom}
             />
-          </Box>
+          </div>
+          {/* </Box> */}
         </Fade>
       </Modal>
-    </div>
+    </>
   );
 }

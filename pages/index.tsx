@@ -1,100 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import GoogleMapReact, {
   MapOptions,
   Maps,
   ChangeEventValue,
 } from "google-map-react";
-import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 import CustumMarker from "../components/map/marker";
 import PersonMarker from "../components/map/PersonMarker";
 import ModalBottom from "../components/ModalBottom";
 import MyLocationButton from "../components/Button/MyLocationButton";
 import BottomMenuBar from "../components/BottomMenuBar";
-import NavBar from "../components/NavBar";
-import { auth, fireStoreDB, firebaseUser, Firebase } from "../src/firebase";
+import { fireStoreDB } from "../src/firebase";
 import Geocode from "react-geocode";
-import ModalEventList from "../components/ModalEventList";
 import ModalLogin from "../components/ModalLogin";
 import { commonCss } from "../components/css/css";
+import { lightTheme, darkTheme } from "../components/theme";
 
-import { db } from "../db/db";
-import {
-  createMuiTheme,
-  createTheme,
-  Drawer,
-  MuiThemeProvider,
-  useTheme,
-} from "@material-ui/core";
-import { NoEncryptionTwoTone } from "@material-ui/icons";
+import { createTheme, Drawer, MuiThemeProvider } from "@material-ui/core";
+
+import ModalEventList from "../components/ModalEventList";
+import NavBar from "../components/NavBar";
+import { ThemeSet } from "./_app";
 
 const APIKEY = "";
 Geocode.setApiKey(`${process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}`);
-
-//
-//     [theme.breakpoints.up("xl")]: {
-//       width: drawerWidth,
-//       flexShrink: 0,
-//     },
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      width: "100%",
-      position: "fixed",
-      top: "9vh",
-      zIndex: 1,
-      height: "84vh",
-      [theme.breakpoints.up("sm")]: {
-        height: "91vh",
-        flexShrink: 0,
-      },
-    },
-    myLocationButton: {
-      position: "fixed",
-      zIndex: 20,
-      right: "10px",
-      bottom: "19vh",
-      [theme.breakpoints.up("sm")]: {
-        bottom: "11vh",
-      },
-    },
-    drawerPaper: {
-      [theme.breakpoints.up("sm")]: {
-        width: "60%",
-        height: "100vh",
-        backgroundColor: "rgba(255, 255, 255, 0.47)",
-        flexShrink: 0,
-        padding: 10,
-        right: "0 !important",
-        left: "auto !important",
-      },
-      [theme.breakpoints.down("xs")]: {
-        backgroundColor: "rgba(255, 255, 255, 0.47)",
-        width: "100%",
-        flexShrink: 0,
-        padding: 15,
-      },
-    },
-    drawerPaperBottom: {
-      [theme.breakpoints.up("sm")]: {
-        width: "100%",
-        height: "40vh",
-        backgroundColor: "rgba(255, 255, 255, 1)",
-        flexShrink: 0,
-        padding: 10,
-        right: "0 !important",
-        top: "none !important",
-        left: "auto !important",
-      },
-      [theme.breakpoints.down("xs")]: {
-        backgroundColor: "rgba(255, 255, 255, 1)",
-        width: "100%",
-        flexShrink: 0,
-        padding: 15,
-      },
-    },
-  })
-);
 
 const themeBottomWindow = createTheme({
   overrides: {
@@ -103,11 +32,15 @@ const themeBottomWindow = createTheme({
         top: "none",
       },
     },
+    // MuiPaper: {
+    //   root: {
+    //     backgroundColor: theme.palette.background.paper,
+    //   },
+    // },
   },
 });
 
 export default function CreateMaps(props) {
-  const classes = useStyles();
   const commonClasses = commonCss();
   const createMapOptions = (maps: Maps): MapOptions => {
     return {
@@ -287,6 +220,7 @@ export default function CreateMaps(props) {
   const [eventList, setEventList] = useState(props.EventList);
   const [userTagList, setUserTagList] = useState(props.userTagList);
   const [switchRecom, setSwitchRecom] = useState(false);
+  const [switchFavorite, setSwitchFavorite] = useState(false);
   const [modalLoginOpen, setModalLoginOpen] = React.useState(false);
   const handleModalLoginopen = () => setModalLoginOpen(!modalLoginOpen);
 
@@ -308,7 +242,6 @@ export default function CreateMaps(props) {
   const [modalEventListHidden, setmodalEventListHidden] = useState(true);
   const [selectedButtonId, setselectedButtonId] = useState(null);
   const [mapHeight, setmapHeight] = useState("100%");
-  const theme = useTheme();
 
   function handleButtonClick(buttonId) {
     setselectedButtonId(buttonId);
@@ -401,6 +334,86 @@ export default function CreateMaps(props) {
   }
   getgeolocation();
 
+  const themeColor = () => {
+    if (theme === lightTheme) {
+      return lightTheme.palette.background.paper;
+    } else {
+      return darkTheme.palette.background.paper;
+    }
+  };
+
+  const { theme, setTheme } = useContext(ThemeSet);
+  const [modalBackgroundColor, setmodalbackgroundColor] = useState("");
+  useEffect(() => {
+    if (theme === lightTheme) {
+      setmodalbackgroundColor("rgba(255, 255, 255, 0.8)");
+    } else if (theme === darkTheme) {
+      setmodalbackgroundColor("rgba(0, 0, 0, 0.7)");
+    }
+  }, [theme]);
+
+  const useStyles = makeStyles((theme) =>
+    createStyles({
+      root: {
+        width: "100%",
+        position: "fixed",
+        top: "9vh",
+        zIndex: 1,
+        height: "84vh",
+        [theme.breakpoints.up("sm")]: {
+          height: "91vh",
+          flexShrink: 0,
+        },
+      },
+      myLocationButton: {
+        position: "fixed",
+        zIndex: 20,
+        right: "10px",
+        bottom: "19vh",
+        [theme.breakpoints.up("sm")]: {
+          bottom: "11vh",
+        },
+      },
+      //modalEventListのdrawerのスタイル
+      drawerPaper: {
+        [theme.breakpoints.up("sm")]: {
+          width: "60%",
+          height: "100vh",
+          backgroundColor: modalBackgroundColor,
+          flexShrink: 0,
+          padding: 10,
+          right: "0 !important",
+          left: "auto !important",
+        },
+        [theme.breakpoints.down("xs")]: {
+          backgroundColor: modalBackgroundColor,
+          width: "100%",
+          flexShrink: 0,
+          padding: 15,
+        },
+      },
+      //modalBottomのdrawerのスタイル
+      drawerPaperBottom: {
+        [theme.breakpoints.up("sm")]: {
+          width: "100%",
+          height: "40vh",
+          flexShrink: 0,
+          padding: 10,
+          right: "0 !important",
+          top: "none !important",
+          left: "auto !important",
+        },
+        [theme.breakpoints.down("xs")]: {
+          width: "100%",
+          flexShrink: 0,
+          padding: 15,
+        },
+      },
+    })
+  );
+
+  const classes = useStyles();
+
   return (
     <>
       <NavBar
@@ -409,7 +422,7 @@ export default function CreateMaps(props) {
         setModalLoginOpen={setModalLoginOpen}
         modalLoginOpen={modalLoginOpen}
       />
-      {/* <ResponsiveAppBar /> */}
+
       <BottomMenuBar
         setmodalEventListHidden={setmodalEventListHidden}
         modalEventListHidden={modalEventListHidden}
@@ -441,10 +454,27 @@ export default function CreateMaps(props) {
           setselectedButtonId={setselectedButtonId}
           switchRecom={switchRecom}
           setSwitchRecom={setSwitchRecom}
+          switchFavorite={switchFavorite}
+          setSwitchFavorite={setSwitchFavorite}
         />
       </Drawer>
 
-      <MuiThemeProvider theme={themeBottomWindow}>
+      <MuiThemeProvider
+        theme={createTheme({
+          overrides: {
+            MuiBackdrop: {
+              root: {
+                top: "none",
+              },
+            },
+            MuiPaper: {
+              root: {
+                backgroundColor: themeColor,
+              },
+            },
+          },
+        })}
+      >
         <Drawer
           style={{
             top: "none !important",
@@ -548,7 +578,6 @@ export default function CreateMaps(props) {
 }
 
 export async function getServerSideProps() {
-  // const EventList = await db
   const Event = [];
   const fireStoredbEventList = await fireStoreDB.collection("eventList").get();
   //firestoreのドキュメントIDも同時に格納

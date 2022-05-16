@@ -1,5 +1,4 @@
-import { createMuiTheme, } from '@material-ui/core/styles';
-import { createTheme, responsiveFontSizes } from '@material-ui/core'
+import { createTheme} from '@material-ui/core'
 import { red } from '@material-ui/core/colors';
 
 /* COLOR */
@@ -29,9 +28,38 @@ const fontFamily = [
     '"Segoe UI Symbol"',
 ]
 
-// Create a theme instance.
-const theme = createTheme({
+
+export const theme  =
+  createTheme({
+
+    spacing: spacing,
+    breakpoints: {
+        values: {
+            xl,
+            lg,
+            md,
+            sm,
+            xs
+        }
+    },
+    typography: {
+        fontFamily: fontFamily.join(','),
+    },
+    overrides: {
+        MuiToolbar: {
+            root: {
+              justifyContent: 'space-between',
+              
+            }
+      },
+    },
+    
+});
+
+export const lightTheme =
+  createTheme({
   palette: {
+    type: 'light',
     primary: {
       main: '#19856b',
     },
@@ -89,5 +117,65 @@ const theme = createTheme({
     },
     
 });
+export const darkTheme = createTheme({
+  palette: {
+     type: 'dark',
+    primary: {
+      main: '#0A1929',
+    },
+    secondary: {
+      main: '#ff3d00',
+      light: '#ff6333',
+    },
+    error: {
+      main: red.A400,
+    },
+    background: {
+      default: '#fff',
+    },
+    common: {
+      black: '#343a40',
+      white: '#F4F4F4',
+    },
+    info: {
+        main: '#005CAF',
+        light: '#0087FC',
+        dark: '#00437D',
+      },
+      success: {
+          main: '#00AA90',
+          light: '#00F7D2',
+          dark: '#007866',
+      },
+      warning: {
+          main: '#FFB11B',
+          light: '#FFDB0F',
+          dark: '#E8820E',
+      },
+      tonalOffset: 0.2,
+    },
+    spacing: spacing,
+    breakpoints: {
+        values: {
+            xl,
+            lg,
+            md,
+            sm,
+            xs
+        }
+    },
+    typography: {
+        fontFamily: fontFamily.join(','),
+    },
+    overrides: {
+        MuiToolbar: {
+            root: {
+              justifyContent: 'space-between',
+              
+            }
+      },
+    },
+    
+});
 
-export default theme;
+// export default theme;

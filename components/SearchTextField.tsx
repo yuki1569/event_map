@@ -12,14 +12,12 @@ const ListItems: React.FC<Props> = (props) => (
 );
 
 export default function SearchTextField(props) {
-
   //props.EventList = firestoreのeventList
-  const products = props.initialEventList
+  const products = props.initialEventList;
 
   const [keyword, setKeyword] = useState("");
   const [showLists, setShowLists] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState(products);
-
 
   useEffect(() => {
     if (keyword === "") {
@@ -38,50 +36,52 @@ export default function SearchTextField(props) {
       return;
     }
 
-    const result = products.filter((product) => 
-      
-      searchKeywords.every((kw) => 
-        // product.tagList.join().toLowerCase().indexOf(kw) !== -1
-        // product.tagList.join().toLowerCase().indexOf(kw) !== -1
-        product.title.toLowerCase().indexOf(kw) !== -1
-      )
-   
+    const result = products.filter(
+      (product) =>
+        searchKeywords.every(
+          (kw) =>
+            // product.tagList.join().toLowerCase().indexOf(kw) !== -1
+            // product.tagList.join().toLowerCase().indexOf(kw) !== -1
+            product.title.toLowerCase().indexOf(kw) !== -1
+        )
+
       // searchKeywords.every((kw) => product.title.toLowerCase().indexOf(kw) !== -1)
     );
     // setFilteredProducts(result.length ? result : ["No Item Found"]);
     setFilteredProducts(result);
-    props.setModalEventList(result)
+    props.setModalEventList(result);
   }, [keyword]);
 
   return (
     <>
-    <p style={{
-      display:'inline-block',
-      zIndex: 30,
-      backgroundColor: 'white',
-      borderRadius:'4px'
-    }}>
-      <TextField
-        variant="filled"
-        id="field"
-        color="secondary"
-        label="enter keywords"
-        onChange={(e) => setKeyword(e.target.value)}
-        // onClick={() => setShowLists(true)}
-        // onBlur={() => setShowLists(false)}
-        onKeyPress={e => {
-          // e.keyCodeは常に0になる
-          if (e.key === 'Enter') {
-            // エンターキー押下時の処理
-            setShowLists(false)
-            // props.setSearchValue(filteredProducts)
-            props.setModalEventList(filteredProducts)
-            props.setEventListMarker(filteredProducts)
-          }
+      <p
+        style={{
+          display: "inline-block",
+          zIndex: 30,
+          // backgroundColor: "white",
+          borderRadius: "4px",
         }}
-      />
-
+      >
+        <TextField
+          variant="filled"
+          id="field"
+          // color="secondary"
+          label="enter keywords"
+          onChange={(e) => setKeyword(e.target.value)}
+          // onClick={() => setShowLists(true)}
+          // onBlur={() => setShowLists(false)}
+          onKeyPress={(e) => {
+            // e.keyCodeは常に0になる
+            if (e.key === "Enter") {
+              // エンターキー押下時の処理
+              setShowLists(false);
+              // props.setSearchValue(filteredProducts)
+              props.setModalEventList(filteredProducts);
+              props.setEventListMarker(filteredProducts);
+            }
+          }}
+        />
       </p>
-      </>
+    </>
   );
-};
+}

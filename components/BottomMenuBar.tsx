@@ -13,7 +13,6 @@ import SearchIcon from "@material-ui/icons/Search";
 import PersonIcon from "@material-ui/icons/Person";
 import MapIcon from "@material-ui/icons/Map";
 import AddButtons from "./Button/AddButton";
-import ModalAddWindow from "./ModalAddWidow";
 import Drawer from "@material-ui/core/Drawer";
 import AddForm from "./AddForm";
 import DrawerCloseButton from "./Button/DrawerCloseButton";
@@ -67,9 +66,6 @@ export default function BottomMenuBar(props, modalEventListHidden) {
 
   return (
     <>
-      {/* <div>
-        <ModalAddWindow modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} />
-      </div> */}
       {auth.currentUser ? (
         <div
           className={commonClasses.buttonBottom}

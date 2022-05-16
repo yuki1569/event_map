@@ -1,19 +1,26 @@
 import Modal from "react-modal";
 import ModalEventListDetails from "./ModalEventListDetails";
 import { useState, useEffect, ReactElement, Suspense } from "react";
-import { auth, fireStoreDB, firebaseUser } from "../src/firebase";
+import { auth, fireStoreDB, firebaseUser, Firebase } from "../src/firebase";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ModalCloseButton from "./Button/ModalCloseButton";
 import SearchTextField from "./SearchTextField";
 import ToggleButtons from "../components/Button/ToggleButoon";
-import SwitchCom from "../components/Swith";
+import SwitchCom from "./SwithCom";
 import Grid from "@material-ui/core/Grid";
 import EventListItem from "./ModalEventListItem";
 import { Collections } from "@material-ui/icons";
 import firebase from "firebase";
 import { commonCss } from "./css/css";
-import { createStyles, makeStyles, Theme } from "@material-ui/core";
+import {
+  createStyles,
+  FormControlLabel,
+  FormGroup,
+  makeStyles,
+  Switch,
+  Theme,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -86,11 +93,11 @@ export default function ModalEventList(props) {
 
   useEffect(() => {
     const searchEventList = async () => {
+      let EventList = [];
       const res1 = await fireStoreDB.collection("eventList").get();
       const res2 = await fireStoreDB.collection("createEvent").get();
-
       if (res1.empty) return [];
-      const EventList = [];
+
       const key = [];
       let i = 0;
 
@@ -99,13 +106,32 @@ export default function ModalEventList(props) {
         EventList[i].docId = doc.id;
         i++;
         key.push(index);
+        console.log(EventList);
       });
       await res2.docs.map((doc, index) => {
         EventList.push(doc.data());
         EventList[i].docId = doc.id;
         i++;
         key.push(index);
+        console.log(EventList);
       });
+      console.log("全てのリスト");
+      console.dir(EventList);
+
+      if (props.switchRecom) {
+        let list = [];
+
+        EventList.map((doc) => {
+          props.EventList.map((doc2) => {
+            if (doc.docId == doc2.docId) {
+              list.push(doc);
+            }
+          });
+        });
+        EventList = list;
+        console.log("おすすめのリスト");
+        console.dir(EventList);
+      }
 
       switch (switchSort) {
         case "DateAscending":
@@ -126,7 +152,9 @@ export default function ModalEventList(props) {
 
       setModalEventList(EventList);
     };
-    searchEventList();
+    // searchEventList();
+
+    setTimeout(searchEventList, 100);
   }, [likeUpDate]);
 
   useEffect(() => {
@@ -283,6 +311,13 @@ export default function ModalEventList(props) {
   }
   getgeolocation();
 
+  const toggleChecked = () => {
+    props.setSwitchFavorite((prev) => !prev);
+    setfavoritehide(!favoritehide);
+    setListUpDate(!listUpDate);
+    props.setSwitchRecom(false);
+  };
+
   return (
     <div>
       {/* リストごとの詳細画面用モーダル */}
@@ -322,6 +357,7 @@ export default function ModalEventList(props) {
         />
       </div>
 
+      {/*おすすめのみ表示スイッチ */}
       <SwitchCom
         initialEventList={props.initialEventList}
         userTagList={props.userTagList}
@@ -334,7 +370,17 @@ export default function ModalEventList(props) {
         switchRecom={props.switchRecom}
         setSwitchRecom={props.setSwitchRecom}
         setfavoritehide={setfavoritehide}
+        setSwitchFavorite={props.setSwitchFavorite}
       />
+      {/* お気に入りのみスイッチ */}
+      <FormGroup>
+        <FormControlLabel
+          control={
+            <Switch checked={props.switchFavorite} onChange={toggleChecked} />
+          }
+          label="お気に入り"
+        />
+      </FormGroup>
 
       <ToggleButtons
         sortDateAscendingOrder={() =>
@@ -351,21 +397,11 @@ export default function ModalEventList(props) {
         }
       />
 
-      {/* お気に入りのみ表示ボタン */}
-      <div id="button">
-        <button
-          onClick={() => {
-            setfavoritehide(!favoritehide);
-            setListUpDate(!listUpDate);
-            props.setSwitchRecom(false);
-          }}
-        >
-          お気に入りのみ表示
-        </button>
-      </div>
-
       {/* お気に入りのみ表示 */}
-      <div id="favoriteList" style={{ display: toggle(favoritehide) }}>
+      <div
+        id="favoriteList"
+        style={{ display: toggle(favoritehide), paddingTop: "20px" }}
+      >
         {auth.currentUser ? (
           <Grid container spacing={2}>
             {bookMark.map((value, index) => {
@@ -398,7 +434,10 @@ export default function ModalEventList(props) {
       </div>
 
       {/* イベントリスト全て表示 */}
-      <div id="eventList" style={{ display: toggle(!favoritehide) }}>
+      <div
+        id="eventList"
+        style={{ display: toggle(!favoritehide), paddingTop: "20px" }}
+      >
         <Grid container spacing={2}>
           {modalEventList.map((value, index) => (
             <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -485,4 +524,7 @@ export default function ModalEventList(props) {
       {/* </Modal> */}
     </div>
   );
+}
+function initFirebaseAuth() {
+  throw new Error("Function not implemented.");
 }

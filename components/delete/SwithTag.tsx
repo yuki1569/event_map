@@ -3,7 +3,7 @@ import Switch from "@material-ui/core/Switch";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { useState, useEffect, ReactElement } from "react";
-import { auth, fireStoreDB, firebaseUser } from "../src/firebase";
+import { auth, fireStoreDB, firebaseUser } from "../../src/firebase";
 
 export default function SwitchTag(props) {
   let lists = props.userTagList;

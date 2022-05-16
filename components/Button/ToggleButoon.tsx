@@ -24,7 +24,7 @@ export default function ToggleButtons(props) {
         onChange={handleAlignment}
         aria-label="text alignment"
       >
-        <div style={{ backgroundColor: "white", borderRadius: "4px" }}>
+        <div style={{ borderRadius: "4px" }}>
           <ToggleButton
             value="left"
             aria-label="left aligned"
@@ -37,7 +37,7 @@ export default function ToggleButtons(props) {
           </ToggleButton>
         </div>
 
-        <div style={{ backgroundColor: "white", borderRadius: "4px" }}>
+        <div style={{ borderRadius: "4px" }}>
           <ToggleButton
             value="center"
             aria-label="centered"
@@ -50,7 +50,7 @@ export default function ToggleButtons(props) {
           </ToggleButton>
         </div>
 
-        <div style={{ backgroundColor: "white", borderRadius: "4px" }}>
+        <div style={{ borderRadius: "4px" }}>
           <ToggleButton
             value="right"
             aria-label="right aligned"

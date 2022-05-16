@@ -1,7 +1,6 @@
 import {
   Login,
   GithubLogin,
-  fireStoreDB,
   Logout,
   auth,
   firebaseUser,

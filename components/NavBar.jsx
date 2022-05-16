@@ -14,6 +14,7 @@ import Box from "@material-ui/core/Box";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
+import SwithChangeTheme from "./SwithChangeTheme";
 
 const drawerWidth = 180;
 
@@ -278,6 +279,7 @@ export default function NavBar(props) {
           }}
           className="serchBox"
         >
+          <SwithChangeTheme/>
           <div
             onClick={() => {
               props.setmodalEventListHidden(!props.modalEventListHidden)

@@ -18,7 +18,6 @@ export default function SwitchCom(props) {
   const checked = props.switchRecom;
   const setChecked = props.setSwitchRecom;
 
-  // const [checked, setChecked] = useState(false);
   const [uid, setUid] = useState("id");
   const userTagList = [];
   const tagList = [];
@@ -32,7 +31,6 @@ export default function SwitchCom(props) {
     // 以降であれば currentUser にアクセスしても OK
     if (Firebase.auth().currentUser) {
       await setUid(Firebase.auth().currentUser.uid);
-      console.log(uid);
       const fireStoredbUserTagList = await fireStoreDB
         .collection("users")
         .get();
@@ -56,6 +54,7 @@ export default function SwitchCom(props) {
       await props.setEventListMarker(lists);
     }
   }
+
   useEffect(() => {
     checkRecom();
   }, [checked]);
@@ -104,6 +103,7 @@ export default function SwitchCom(props) {
   const toggleChecked = () => {
     setChecked((prev) => !prev);
     props.setfavoritehide(true);
+    props.setSwitchFavorite(false);
   };
 
   // useEffect(() => {

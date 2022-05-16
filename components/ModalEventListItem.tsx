@@ -17,11 +17,6 @@ const useStyles = makeStyles({
   },
 });
 
-// type Props = Post & {
-//   imageUrl: string;
-//   href: string;
-// };
-
 const EventListItem = ({
   link,
   longitudeLatitude,
