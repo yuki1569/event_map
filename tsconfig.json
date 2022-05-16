@@ -22,7 +22,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "components/map/map.js", "components/delete/NavBar2.jsx", "components/NavBar.jsx"  ],
+, "components/map/map.js", "components/delete/NavBar2.jsx", "components/NavBar.jsx", "components/ModalBottom.tsx"  ],
   "exclude": [
     "node_modules"
   ],

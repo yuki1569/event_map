@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import Modal from "react-modal";
 import ModalCloseButton from "./Button/ModalCloseButton";
-import { lightTheme, darkTheme, theme } from "../components/theme";
+import { lightTheme, darkTheme, theme } from "./theme";
 import Grid from "@material-ui/core/Grid";
 import { useContext } from "react";
 import { ThemeSet } from "../pages/_app";
@@ -36,7 +36,7 @@ export default function ModalBottom({ ...props }) {
           [theme.breakpoints.down("sm")]: {
             flexDirection: "column-reverse",
           },
-          color: themeColor,
+          // color: themeColor,
         },
       },
     },
